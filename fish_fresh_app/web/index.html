@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="FishCheck ZM — AI fish freshness analyser for Zambia">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="FishCheck ZM">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="manifest" href="manifest.json">
+  <title>FishCheck ZM</title>
+  <style>
+    body { margin: 0; background-color: #F7F9F8; }
+    #loading {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh; font-family: -apple-system, sans-serif;
+      color: #0A7B5C;
+    }
+    #loading .dot-row { display: flex; gap: 8px; margin-top: 16px; }
+    #loading .dot { width: 8px; height: 8px; border-radius: 50%; background: #0A7B5C; animation: pulse 1s ease-in-out infinite; }
+    #loading .dot:nth-child(2) { animation-delay: .15s; }
+    #loading .dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="#0A7B5C" opacity="0.3"/>
+      <path d="M17 12c0-2.76-2.24-5-5-5s-5 2.24-5 5 2.24 5 5 5 5-2.24 5-5zm-5 3l-3-3h2V9h2v3h2l-3 3z" fill="#0A7B5C"/>
+    </svg>
+    <div style="font-size:18px;font-weight:600;margin-top:12px">FishCheck ZM</div>
+    <div style="font-size:13px;color:#888;margin-top:4px">Loading freshness AI...</div>
+    <div class="dot-row"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      var el = document.getElementById('loading');
+      if (el) el.style.display = 'none';
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

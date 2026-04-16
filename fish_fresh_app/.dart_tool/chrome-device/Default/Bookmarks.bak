@@ -1,0 +1,108 @@
+{
+   "checksum": "8a85e331a4553c2ee96aff3dbc4ffc37",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13349440426811991",
+            "date_last_used": "0",
+            "guid": "b5c33a3b-9d12-484b-b328-164027f2f0c0",
+            "id": "13",
+            "name": "VK",
+            "type": "url",
+            "url": "https://vk.com/im?sel=c4"
+         }, {
+            "date_added": "13349533016450212",
+            "date_last_used": "0",
+            "guid": "f864df30-d3ff-4965-a742-f0f852229501",
+            "id": "14",
+            "name": "ChatGPT",
+            "type": "url",
+            "url": "https://chat.openai.com/c/d4243c2a-231f-456d-9ba6-3a9cdbcf7f94"
+         }, {
+            "date_added": "13349816608164440",
+            "date_last_used": "0",
+            "guid": "a6390ad9-6ba4-4798-828f-9973a5625701",
+            "id": "15",
+            "name": "Telegram Web",
+            "type": "url",
+            "url": "https://web.telegram.org/k/"
+         }, {
+            "date_added": "13420649968183638",
+            "date_last_used": "0",
+            "guid": "f5eab231-22d9-4ece-81fa-4ebf993bc4e3",
+            "id": "9",
+            "name": "ASUS Software Portal - Exclusive technology",
+            "type": "url",
+            "url": "https://www.asus.com/Software-and-Innovations-Portal/"
+         }, {
+            "date_added": "13420649968182932",
+            "date_last_used": "0",
+            "guid": "4cbf35b3-e07e-4776-ad40-e73ebea41d5d",
+            "id": "8",
+            "name": "MyASUS Software - Get the best from ASUS PC",
+            "type": "url",
+            "url": "https://www.asus.com/ASUS-Software/"
+         }, {
+            "date_added": "13420649968181431",
+            "date_last_used": "0",
+            "guid": "2ce8e32e-23e6-4e14-b88b-fbccc7946493",
+            "id": "7",
+            "name": "McAfee LiveSafe",
+            "type": "url",
+            "url": "https://home.mcafee.com/root/campaign.aspx?cid=247829"
+         } ],
+         "date_added": "13420649967920274",
+         "date_last_used": "0",
+         "date_modified": "13420649968183638",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Bookmarks bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [ {
+            "date_added": "13349379745214621",
+            "date_last_used": "0",
+            "guid": "a5e26a01-4eac-4cef-92de-503fec07dc75",
+            "id": "10",
+            "name": "moodle",
+            "type": "url",
+            "url": "https://moodle.kstu.ru/?lang=en"
+         }, {
+            "date_added": "13349385761851916",
+            "date_last_used": "0",
+            "guid": "365615d0-f581-4242-9b7c-c41e6471e570",
+            "id": "11",
+            "name": "VK",
+            "type": "url",
+            "url": "https://vk.com/feed"
+         }, {
+            "date_added": "13349963160216819",
+            "date_last_used": "0",
+            "guid": "b37ff92d-a4f8-4d99-9fe3-049bcbe5c226",
+            "id": "12",
+            "name": "КНИТУ | Личный кабинет",
+            "type": "url",
+            "url": "https://e.kstu.ru/cabinet/"
+         } ],
+         "date_added": "13420649967920274",
+         "date_last_used": "0",
+         "date_modified": "13349963160216819",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other bookmarks",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13420649967920274",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile bookmarks",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}
