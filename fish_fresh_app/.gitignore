@@ -1,0 +1,46 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+
+# Claude AI
+.claude/
+../.claude/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Android
+android/local.properties
+android/.gradle/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/key.properties
+*.keystore
+*.jks
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+
+# Windows
+windows/flutter/ephemeral/
+
+# Environment / secrets
+.env
+*.env
+supabase/.env
+
+# IDE
+.idea/
+.vscode/settings.json
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

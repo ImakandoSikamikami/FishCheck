@@ -44,6 +44,13 @@
       if (el) el.style.display = 'none';
     });
   </script>
-  <script src="flutter_bootstrap.js" async></script>
+  <script src="flutter_bootstrap.js"></script>
+  <script>
+    _flutter.loader.load({
+      config: {
+        renderer: "html",
+      },
+    });
+  </script>
 </body>
 </html>

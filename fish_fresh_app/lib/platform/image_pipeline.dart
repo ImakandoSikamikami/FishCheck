@@ -56,11 +56,11 @@ class ImagePipeline {
   /// Returns null if the user cancelled.
   static Future<ProcessedImage?> pick(ImageSourceType source) async {
     try {
+      if (source == ImageSourceType.camera && !isDesktop) {
+        return await _pickFromCamera();
+      }
       if (isDesktop || kIsWeb) {
         return await _pickFromFileSystem();
-      }
-      if (source == ImageSourceType.camera) {
-        return await _pickFromCamera();
       }
       return await _pickFromGallery();
     } catch (e) {

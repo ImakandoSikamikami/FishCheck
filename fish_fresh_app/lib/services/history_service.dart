@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/freshness_result.dart';
 
 class HistoryService {
   static const _key = 'scan_history';
   static const _maxItems = 100;
+  static const _supabasePendingKey = 'supabase_pending_scans';
 
   // ─── Read ──────────────────────────────────────────────────────────────────
 
@@ -38,6 +42,86 @@ class HistoryService {
     existing.add(jsonEncode(result.toStorageMap()));
     if (existing.length > _maxItems) existing.removeAt(0);
     await prefs.setStringList(_key, existing);
+
+    unawaited(_syncToSupabase(result));
+  }
+
+  static Future<void> _syncToSupabase(FreshnessResult result) async {
+    if (result.isPending) return;
+
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) {
+      debugPrint('SupabaseSync: skipped — no signed-in user');
+      return;
+    }
+
+    final freshnessStr = switch (result.freshness) {
+      FreshnessLevel.fresh => 'Fresh',
+      FreshnessLevel.acceptable => 'Acceptable',
+      FreshnessLevel.poor => 'Poor',
+      FreshnessLevel.spoiled => 'Spoiled',
+      _ => null,
+    };
+    if (freshnessStr == null) {
+      debugPrint('SupabaseSync: skipped — unknown freshness level');
+      return;
+    }
+
+    final row = <String, dynamic>{
+      'user_id': userId,
+      'fish_type': result.fishType,
+      'freshness': freshnessStr,
+      'score': result.score,
+      'confidence': result.confidence,
+      'eyes': result.eyes,
+      'skin': result.skin,
+      'gills': result.gills,
+      'flesh': result.flesh,
+      'odour_guess': result.odourGuess,
+      'safe_to_eat': result.freshness == FreshnessLevel.fresh ||
+          result.freshness == FreshnessLevel.acceptable,
+      'advice': result.advice,
+      'sell_by': result.sellBy,
+      'storage_tip': result.storageTip,
+      'price_impact': result.priceImpact,
+      'analysed_at': result.analysedAt.toIso8601String(),
+      'is_pending': false,
+    };
+
+    try {
+      debugPrint('SupabaseSync: inserting for user $userId');
+      await Supabase.instance.client.from('scans').insert(row);
+      debugPrint('SupabaseSync: insert OK');
+    } catch (e) {
+      debugPrint('SupabaseSync: insert FAILED — $e');
+      final prefs = await SharedPreferences.getInstance();
+      final pending = prefs.getStringList(_supabasePendingKey) ?? [];
+      pending.add(jsonEncode({...row, 'is_pending': true}));
+      await prefs.setStringList(_supabasePendingKey, pending);
+    }
+  }
+
+  /// Retry any rows that failed to insert while offline.
+  /// Call this when connectivity is restored (e.g. from OfflineQueueService.init).
+  static Future<void> syncPendingToSupabase() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final pending = prefs.getStringList(_supabasePendingKey) ?? [];
+    if (pending.isEmpty) return;
+
+    final remaining = <String>[];
+    for (final s in pending) {
+      try {
+        final row = Map<String, dynamic>.from(jsonDecode(s) as Map);
+        row['is_pending'] = false;
+        await Supabase.instance.client.from('scans').insert(row);
+      } catch (_) {
+        remaining.add(s);
+      }
+    }
+    await prefs.setStringList(_supabasePendingKey, remaining);
   }
 
   /// Replace a pending placeholder with the real analysed result

@@ -1,0 +1,296 @@
+{
+  "@@locale": "ru",
+
+  "cancel": "Отмена",
+  "clearAll": "Очистить",
+
+  "navHome": "Главная",
+  "navScan": "Сканировать",
+  "navVendors": "Продавцы",
+  "navHistory": "История",
+  "navSettings": "Настройки",
+
+  "shellSubtitle": "Анализ свежести",
+  "shellFooter": "FishCheck ZM · Мгновенный анализ",
+
+  "homeGoodMorning": "Доброе утро",
+  "homeGoodAfternoon": "Добрый день",
+  "homeGoodEvening": "Добрый вечер",
+  "homeScansToday": "Сканов сегодня",
+  "homeFreshRate": "Доля свежих",
+  "homeTotalScans": "Всего сканов",
+  "homeScanAFish": "Сканировать рыбу",
+  "homeMostScanned": "Чаще всего: {species}",
+  "@homeMostScanned": {
+    "placeholders": {
+      "species": {"type": "String"}
+    }
+  },
+  "homeTakeOrUpload": "Сфотографируйте или загрузите",
+  "homeSpeciesGuide": "Справочник видов",
+  "homeScanHistory": "История сканов",
+  "homeRecentScans": "Недавние сканы",
+  "homeSeeAll": "Все",
+  "homeNoScansYet": "Нет сканов",
+  "homeScanFirstFish": "Отсканируйте рыбу, чтобы начать",
+  "homeNoInternet": "Нет интернета",
+  "homeOfflineQueued": "{count, plural, one{Нет интернета · {count} скан в очереди} few{Нет интернета · {count} скана в очереди} many{Нет интернета · {count} сканов в очереди} other{Нет интернета · {count} сканов в очереди}}",
+  "@homeOfflineQueued": {
+    "placeholders": {
+      "count": {"type": "num"}
+    }
+  },
+  "homeOfflineReady": "{count, plural, one{{count} оффлайн-скан готов к анализу} few{{count} оффлайн-скана готовы к анализу} many{{count} оффлайн-сканов готовы к анализу} other{{count} оффлайн-сканов готовы к анализу}}",
+  "@homeOfflineReady": {
+    "placeholders": {
+      "count": {"type": "num"}
+    }
+  },
+  "homeAnalyseNow": "Анализировать",
+
+  "scanTitle": "Сканировать рыбу",
+  "scanSubtitle": "Сфотографируйте или загрузите из галереи",
+  "scanTapToCamera": "Нажмите для камеры",
+  "scanOrUseButtons": "Или используйте кнопки ниже",
+  "scanWithCamera": "Камера",
+  "scanSelectPicture": "Выбрать фото",
+  "scanAnalysing": "Анализ свежести...",
+  "scanAnalyse": "Анализировать свежесть",
+  "scanChooseDifferent": "Выбрать другое фото",
+  "scanErrorLoadImage": "Не удалось загрузить: {error}",
+  "@scanErrorLoadImage": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "scanErrorAnalysis": "Ошибка анализа. Попробуйте более чёткое фото.",
+  "scanTipClearEyes": "Чистые глаза",
+  "scanTipShinySkin": "Блестящая кожа",
+  "scanTipRedGills": "Красные жабры",
+  "scanTipFirmFlesh": "Упругое мясо",
+
+  "resultFreshnessScore": "Оценка свежести",
+  "resultVisualIndicators": "Визуальные показатели",
+  "resultAdvice": "Совет",
+  "resultSellBy": "Продать до",
+  "resultSafeToEat": "Можно есть",
+  "resultDoNotEat": "Нельзя есть",
+  "resultAnalysisPending": "Анализ ожидает",
+  "resultPendingSubtitle": "Сохранено — анализ при подключении.",
+  "resultEyes": "Глаза",
+  "resultSkin": "Кожа",
+  "resultGills": "Жабры",
+  "resultFlesh": "Мясо",
+  "resultOdour": "Запах",
+  "resultScanAnother": "Сканировать ещё",
+  "resultViewHistory": "История сканов",
+  "resultConfidentDesktop": "{confidence}% уверенность в определении вида",
+  "@resultConfidentDesktop": {
+    "placeholders": {
+      "confidence": {"type": "int"}
+    }
+  },
+  "resultConfidentMobile": "{confidence}% уверен",
+  "@resultConfidentMobile": {
+    "placeholders": {
+      "confidence": {"type": "int"}
+    }
+  },
+  "resultShareSubject": "Отчёт о свежести — {fishType}",
+  "@resultShareSubject": {
+    "placeholders": {
+      "fishType": {"type": "String"}
+    }
+  },
+  "resultShareBody": "FishCheck ZM — Отчёт о свежести\nРыба: {fishType}\nСвежесть: {freshness} ({score}%)\nПродать до: {sellBy}\nБезопасно: {safe}\nСовет: {advice}\nОтсканировано: {scanned}\nFishCheck ZM",
+  "@resultShareBody": {
+    "placeholders": {
+      "fishType": {"type": "String"},
+      "freshness": {"type": "String"},
+      "score": {"type": "int"},
+      "sellBy": {"type": "String"},
+      "safe": {"type": "String"},
+      "advice": {"type": "String"},
+      "scanned": {"type": "String"}
+    }
+  },
+  "resultShareYes": "Да",
+  "resultShareNo": "Нет",
+  "resultPricePrefix": "Цена: {impact}",
+  "@resultPricePrefix": {
+    "placeholders": {
+      "impact": {"type": "String"}
+    }
+  },
+
+  "historyTitle": "История сканов",
+  "historyClearAllTooltip": "Очистить",
+  "historySearch": "Поиск по названию рыбы...",
+  "historyFilterAll": "Все",
+  "historyFilterFresh": "Свежая",
+  "historyFilterAcceptable": "Приемлемая",
+  "historyFilterPoor": "Плохая",
+  "historyFilterSpoiled": "Испорченная",
+  "historyNoScansYet": "Нет сканов",
+  "historyNoScansSubtitle": "Отсканируйте рыбу для истории",
+  "historyNoResults": "Нет сканов «{filter}»",
+  "@historyNoResults": {
+    "placeholders": {
+      "filter": {"type": "String"}
+    }
+  },
+  "historyScore": "оценка",
+  "historyClearTitle": "Очистить историю",
+  "historyClearContent": "Все записи будут удалены. Это нельзя отменить.",
+
+  "settingsTitle": "Настройки",
+  "settingsAccount": "Аккаунт",
+  "settingsScansToCloud": "Сканы в облаке",
+  "settingsSignOut": "Выйти",
+  "settingsHistoryOnDevice": "История на устройстве",
+  "settingsSignIn": "Войти или зарегистрироваться",
+  "settingsSyncAcrossDevices": "Синхронизация устройств",
+  "settingsNotifications": "Уведомления",
+  "settingsEnableReminders": "Включить напоминания",
+  "settingsRemindersSubtitle": "Напоминание о проверке через 24 часа",
+  "settingsNotificationsEnabled": "Уведомления включены!",
+  "settingsNotificationsDisabled": "Включите уведомления в настройках устройства.",
+  "settingsAppearance": "Внешний вид",
+  "settingsTheme": "Тема",
+  "settingsThemeSubtitle": "Светлая, тёмная или системная",
+  "settingsMachineLearning": "Машинное обучение",
+  "settingsAiProgress": "Прогресс ИИ",
+  "settingsAiProgressSubtitle": "Исправления видов и точность модели",
+  "settingsAnalysisEngine": "Движок анализа",
+  "settingsAnalysisEngineSubtitle": "Анализ на устройстве — работает офлайн",
+  "settingsData": "Данные",
+  "settingsClearHistory": "Очистить историю",
+  "settingsClearHistorySubtitle": "Удалить все сканы с устройства",
+  "settingsClearHistoryDialog": "Очистить историю",
+  "settingsClearHistoryContent": "Удалить всю историю? Это нельзя отменить.",
+  "settingsClearHistorySuccess": "История очищена",
+  "settingsAbout": "О приложении",
+  "settingsAboutApp": "О FishCheck ZM",
+  "settingsAboutSubtitle": "Версия, миссия, авторы",
+  "settingsSpeciesSupported": "Поддерживаемые виды",
+  "settingsSpeciesSubtitle": "Kapenta · Bream · Tiger fish · Mpumbu · Chessa · Vundu",
+  "settingsFishVendors": "Рыбные продавцы",
+  "settingsVendorsSubtitle": "Продавцы рядом с вами",
+  "settingsFooter": "FishCheck ZM · v1.0.0 · ",
+  "settingsLanguage": "Язык",
+  "settingsLanguageSubtitle": "Выберите язык интерфейса",
+
+  "vendorsTitle": "Рыбные продавцы",
+  "vendorsRegisterTooltip": "Стать продавцом",
+  "vendorsSearch": "Поиск продавцов и рынков...",
+  "vendorsNoVendors": "Продавцы не найдены",
+  "vendorsNoVendorsSubtitle": "Попробуйте другой город или запрос",
+  "vendorsRefresh": "Обновить",
+  "vendorsCall": "Позвонить",
+  "vendorsWhatsApp": "WhatsApp",
+  "vendorScans": "{count} сканов",
+  "@vendorScans": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "vendorsRegisterSheet": "Стать продавцом",
+  "vendorsRegisterDesc": "Зарегистрируйтесь, чтобы покупатели могли найти вас на FishCheck ZM.",
+  "vendorsRegisterButton": "Зарегистрироваться",
+  "vendorsNotNow": "Не сейчас",
+  "vendorsComingSoon": "Регистрация продавцов скоро!",
+
+  "authCreateAccount": "Создать аккаунт",
+  "authWelcomeBack": "С возвращением",
+  "authSignUpSubtitle": "Зарегистрируйтесь для сохранения и синхронизации сканов",
+  "authSignInSubtitle": "Войдите для доступа к истории сканов",
+  "authEnterEmailFirst": "Сначала введите email.",
+  "authPasswordResetSent": "Письмо отправлено. Проверьте почту.",
+  "authFullName": "Полное имя",
+  "authNameRequired": "Имя обязательно",
+  "authPhone": "Телефон (необязательно)",
+  "authEmail": "Эл. почта",
+  "authEmailRequired": "Email обязателен",
+  "authEmailInvalid": "Введите корректный email",
+  "authPassword": "Пароль",
+  "authPasswordRequired": "Пароль обязателен",
+  "authPasswordTooShort": "Пароль не менее 8 символов",
+  "authForgotPassword": "Забыли пароль?",
+  "authSignIn": "Войти",
+  "authAlreadyHaveAccount": "Уже есть аккаунт? Войти",
+  "authDontHaveAccount": "Нет аккаунта? Зарегистрироваться",
+  "authContinueWithout": "Продолжить без аккаунта",
+
+  "onboardingSkip": "Пропустить",
+  "onboardingGetStarted": "Начать",
+  "onboardingContinue": "Продолжить",
+  "onboarding1Title": "Знайте, что рыба свежая",
+  "onboarding1Subtitle": "Наведите камеру на рыбу и получите мгновенный AI-отчёт. Глаза, кожа, жабры — анализ за секунды.",
+  "onboarding2Title": "Камера или галерея — ваш выбор",
+  "onboarding2Subtitle": "Сфотографируйте на рынке или загрузите из галереи. Любой формат. Работает даже на медленном интернете.",
+  "onboarding3Title": "Создан для замбийских рынков",
+  "onboarding3Subtitle": "Kapenta, Bream, Tiger fish, Mpumbu, Chessa, Vundu — приложение знает все местные виды с местными названиями и ценами.",
+
+  "speciesTitle": "Справочник рыб",
+  "speciesSearch": "Поиск видов или местных названий...",
+  "speciesSignsOfFreshness": "Признаки свежести",
+  "speciesSpoilageWarning": "Признаки порчи",
+  "speciesCookingTip": "Совет по приготовлению",
+  "speciesHabitat": "Среда обитания",
+  "speciesBestSeason": "Лучший сезон",
+  "speciesMarketPrice": "Рыночная цена",
+
+  "kapentaName": "Капента",
+  "kapentaHabitat": "Озёра Танганьика и Кариба",
+  "kapentaSeason": "Круглый год",
+  "kapentaPriceRange": "ZMW 20–60/кг (свежая) · ZMW 80–150/кг (сушёная)",
+  "kapentaDescription": "Маленькие пресноводные сардины — самая важная рыба в Замбии. Продаётся свежей или сушёной. Сушёная капента — основной продукт по всей стране.",
+  "kapentaFreshIndicators": "Свежая: серебристый блеск, ясные глаза, лёгкий морской запах. Сушёная: равномерный светло-коричневый цвет, сухая на ощупь, без плесени.",
+  "kapentaSpoilageWarning": "Желтоватый цвет, сильный рыбный запах или липкость — признаки несвежей рыбы. Сушёная с тёмными пятнами или плесенью должна быть выброшена.",
+  "kapentaCookingTip": "Лучше всего жарить с луком и помидорами, или тушить в арахисовом соусе (гарнир к нсима).",
+
+  "breamName": "Брим (Тиляпия)",
+  "breamHabitat": "Большинство пресных водоёмов",
+  "breamSeason": "Круглый год",
+  "breamPriceRange": "ZMW 35–100/кг",
+  "breamDescription": "Самая популярная рыба в Замбии. Водится в реках, водохранилищах и озёрах. Есть почти на каждом рынке, часто продаётся живой.",
+  "breamFreshIndicators": "Ярко-красные жабры, ясные выпуклые глаза, плотное мясо, которое пружинит при нажатии, блестящая кожа с плотной чешуёй.",
+  "breamSpoilageWarning": "Коричневые или серые жабры, запавшие или мутные глаза, мягкое мясо и кислый запах — признаки порчи.",
+  "breamCookingTip": "Отлично готовить целиком на гриле с помидорами и луком, или жарить. Часто используется в замбийском соусе к нсима.",
+
+  "tigerName": "Тигровая рыба",
+  "tigerHabitat": "Река Замбези, озеро Кариба",
+  "tigerSeason": "Лучше авг–окт",
+  "tigerPriceRange": "ZMW 60–140/кг",
+  "tigerDescription": "Хищная рыба из Замбези и озера Кариба. Ценится за твёрдое белое мясо. Популярна среди рыболовов и как деликатес на рынках у Карибы.",
+  "tigerFreshIndicators": "Характерное серебристое тело с чёрными полосами. Ясные глаза, твёрдое белое мясо, лёгкий свежий запах. Зубы заметны, челюсть чётко очерчена.",
+  "tigerSpoilageWarning": "Блёклые полосы, тусклая кожа, рыхлая чешуя и запах аммиака — признаки несвежести.",
+  "tigerCookingTip": "Лучше запекать или жарить на гриле с лимоном и травами. Твёрдое мясо хорошо держит форму.",
+
+  "mpumbuName": "Мпумбу",
+  "mpumbuHabitat": "Озеро Бангвеулу",
+  "mpumbuSeason": "Июн–окт",
+  "mpumbuPriceRange": "ZMW 50–120/кг",
+  "mpumbuDescription": "Редкая крупная рыба, эндемик озера Бангвеулу. Высоко ценится местными жителями, часто сушится или коптится. Дефицит делает её относительно дорогой.",
+  "mpumbuFreshIndicators": "Серебристое тело с заметной чешуёй. Ясные глаза, ярко-розовые жабры, плотное переливающееся мясо. Свежая рыба почти без запаха.",
+  "mpumbuSpoilageWarning": "Пожелтение мяса и кислый или сильный рыбный запах — признаки порчи.",
+  "mpumbuCookingTip": "Прекрасно коптится или жарится на гриле. Насыщенный вкус — лучше с простыми приправами.",
+
+  "chessaName": "Чесса",
+  "chessaHabitat": "Озёра Бангвеулу и Мверу",
+  "chessaSeason": "Круглый год",
+  "chessaPriceRange": "ZMW 25–70/кг",
+  "chessaDescription": "Рыба среднего размера, распространена в озёрах Бангвеулу и Мверу. Часто продаётся сушёной оптом. Важный источник белка на севере Замбии.",
+  "chessaFreshIndicators": "Серебристая кожа с плотной текстурой. Ясные глаза и целая чешуя. Свежий запах без кислоты. Сушёная — золотисто-коричневая и сухая.",
+  "chessaSpoilageWarning": "Мягкие пятна, слизь на коже, мутные глаза или запах аммиака — повод отказаться.",
+  "chessaCookingTip": "Обычно жарится или сушится в порошок как приправа. Подходит для тушёных блюд и соуса к нсима.",
+
+  "vunduName": "Вунду (Сом)",
+  "vunduHabitat": "Замбези и другие крупные реки",
+  "vunduSeason": "Круглый год",
+  "vunduPriceRange": "ZMW 40–100/кг",
+  "vunduDescription": "Крупный пресноводный сом из рек Замбези и Кафуэ. Может достигать 50 кг. Без чешуи. Отличное твёрдое белое мясо, популярен для копчения.",
+  "vunduFreshIndicators": "Влажная, слегка скользкая кожа (нормально для сома). Плотное бледное мясо, ясные глаза, лёгкий свежий запах без кислоты.",
+  "vunduSpoilageWarning": "Сильная липкость, пожелтение мяса, запах аммиака или мягкость мяса — предупреждающие признаки.",
+  "vunduCookingTip": "Превосходно коптится, жарится крупными кусками или тушится в карри. Густое мясо очень прощает ошибки при готовке."
+}

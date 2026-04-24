@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_router.dart';
+import '../../l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -27,33 +28,40 @@ class _OnboardingPage {
   });
 }
 
-const _pages = [
+List<_OnboardingPage> _buildPages(AppLocalizations l) => [
   _OnboardingPage(
     emoji: '🐟',
-    color: Color(0xFF0A7B5C),
+    color: const Color(0xFF0A7B5C),
     textColor: Colors.white,
-    title: 'Know your fish is fresh',
-    subtitle: 'Point your camera at any fish and get an instant AI-powered freshness report. Eyes, skin, gills — analysed in seconds.',
+    title: l.onboarding1Title,
+    subtitle: l.onboarding1Subtitle,
   ),
   _OnboardingPage(
     emoji: '📸',
-    color: Color(0xFF1565A0),
+    color: const Color(0xFF1565A0),
     textColor: Colors.white,
-    title: 'Camera or gallery — your choice',
-    subtitle: 'Take a live photo at the market or upload one from your gallery. Every image format supported. Results work even on slow internet.',
+    title: l.onboarding2Title,
+    subtitle: l.onboarding2Subtitle,
   ),
   _OnboardingPage(
     emoji: '🇿🇲',
-    color: Color(0xFF7B3A0A),
+    color: const Color(0xFF7B3A0A),
     textColor: Colors.white,
-    title: 'Built for Zambian markets',
-    subtitle: 'Kapenta, Bream, Tiger fish, Mpumbu, Chessa, Vundu — the app knows all local species with local names and fair price ranges.',
+    title: l.onboarding3Title,
+    subtitle: l.onboarding3Subtitle,
   ),
 ];
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final _controller = PageController();
   int _page = 0;
+  late List<_OnboardingPage> _pages;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _pages = _buildPages(AppLocalizations.of(context)!);
+  }
 
   void _next() {
     if (_page < _pages.length - 1) {
@@ -78,6 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final page = _pages[_page];
     return Scaffold(
       backgroundColor: page.color,
@@ -87,7 +96,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Skip button
               Align(
                 alignment: Alignment.topRight,
                 child: Padding(
@@ -95,7 +103,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: TextButton(
                     onPressed: _finish,
                     child: Text(
-                      'Skip',
+                      l.onboardingSkip,
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 14,
@@ -107,7 +115,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              // Page content
               Expanded(
                 child: PageView.builder(
                   controller: _controller,
@@ -117,12 +124,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
-              // Bottom controls
               Padding(
                 padding: const EdgeInsets.fromLTRB(28, 0, 28, 40),
                 child: Column(
                   children: [
-                    // Dots
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(_pages.length, (i) {
@@ -144,7 +149,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                     const SizedBox(height: 28),
 
-                    // Next / Get started button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -160,8 +164,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         child: Text(
                           _page == _pages.length - 1
-                              ? 'Get started'
-                              : 'Continue',
+                              ? l.onboardingGetStarted
+                              : l.onboardingContinue,
                           style: const TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 16,
@@ -192,7 +196,6 @@ class _PageContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Emoji illustration in a glassy circle
           Container(
             width: 160,
             height: 160,
@@ -217,7 +220,6 @@ class _PageContent extends StatelessWidget {
 
           const SizedBox(height: 48),
 
-          // Title
           Text(
             page.title,
             textAlign: TextAlign.center,
@@ -235,7 +237,6 @@ class _PageContent extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Subtitle
           Text(
             page.subtitle,
             textAlign: TextAlign.center,

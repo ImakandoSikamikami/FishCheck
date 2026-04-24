@@ -7,6 +7,7 @@ import '../../models/vendor.dart';
 import '../backend/vendor_backend_service.dart';
 import '../backend/supabase_config.dart';
 import '../../services/vendor_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class VendorsScreen extends StatefulWidget {
   const VendorsScreen({super.key});
@@ -33,11 +34,9 @@ class _VendorsScreenState extends State<VendorsScreen> {
     List<Vendor> vendors;
 
     if (SupabaseConfig.isLoggedIn) {
-      // Use backend if logged in
       vendors = await VendorBackendService.getVendors(
           city: _cityFilter == 'All' ? null : _cityFilter);
     } else {
-      // Fall back to local seed data
       vendors = await VendorService.getAll();
     }
 
@@ -58,19 +57,19 @@ class _VendorsScreenState extends State<VendorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fish vendors'),
+        title: Text(l.vendorsTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_business_rounded),
-            tooltip: 'Register as vendor',
+            tooltip: l.vendorsRegisterTooltip,
             onPressed: () => _showRegisterSheet(),
           ),
         ],
       ),
       body: Column(children: [
-        // Search
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           child: TextField(
@@ -79,7 +78,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
               _search_();
             },
             decoration: InputDecoration(
-              hintText: 'Search vendors or markets...',
+              hintText: l.vendorsSearch,
               hintStyle: const TextStyle(fontFamily: 'Poppins'),
               prefixIcon: const Icon(Icons.search_rounded, size: 20),
               suffixIcon: _search.isNotEmpty
@@ -96,7 +95,6 @@ class _VendorsScreenState extends State<VendorsScreen> {
           ),
         ),
 
-        // City filter chips
         SizedBox(
           height: 48,
           child: ListView(
@@ -131,7 +129,6 @@ class _VendorsScreenState extends State<VendorsScreen> {
           ),
         ),
 
-        // Vendor list
         Expanded(
           child: _loading
               ? const Center(child: CircularProgressIndicator())
@@ -179,6 +176,7 @@ class _VendorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -190,11 +188,9 @@ class _VendorCard extends StatelessWidget {
             width: 0.5),
       ),
       child: Column(children: [
-        // Header
         Padding(
           padding: const EdgeInsets.all(14),
           child: Row(children: [
-            // Avatar
             Container(
               width: 48, height: 48,
               decoration: BoxDecoration(
@@ -228,7 +224,6 @@ class _VendorCard extends StatelessWidget {
                         : AppColors.textSecondary)),
               ],
             )),
-            // Rating
             if (vendor.averageRating != null && vendor.averageRating! > 0)
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Row(mainAxisSize: MainAxisSize.min, children: [
@@ -239,7 +234,7 @@ class _VendorCard extends StatelessWidget {
                       style: const TextStyle(fontFamily: 'Poppins',
                           fontSize: 13, fontWeight: FontWeight.w600)),
                 ]),
-                Text('${vendor.totalScans} scans',
+                Text(l.vendorScans(vendor.totalScans),
                     style: TextStyle(fontFamily: 'Poppins', fontSize: 10,
                         color: isDark ? AppColors.darkTextTertiary
                             : AppColors.textTertiary)),
@@ -247,7 +242,6 @@ class _VendorCard extends StatelessWidget {
           ]),
         ),
 
-        // Description
         if (vendor.description != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
@@ -259,7 +253,6 @@ class _VendorCard extends StatelessWidget {
                 maxLines: 2, overflow: TextOverflow.ellipsis),
           ),
 
-        // Species chips
         if (vendor.fishSpecies.isNotEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
@@ -277,7 +270,6 @@ class _VendorCard extends StatelessWidget {
             ),
           ),
 
-        // Action buttons
         Container(
           decoration: BoxDecoration(
             border: Border(top: BorderSide(
@@ -288,16 +280,16 @@ class _VendorCard extends StatelessWidget {
             Expanded(child: TextButton.icon(
               onPressed: _call,
               icon: const Icon(Icons.phone_rounded, size: 16),
-              label: const Text('Call',
-                  style: TextStyle(fontFamily: 'Poppins', fontSize: 13)),
+              label: Text(l.vendorsCall,
+                  style: const TextStyle(fontFamily: 'Poppins', fontSize: 13)),
             )),
             Container(width: 0.5,
                 color: isDark ? AppColors.darkBorder : AppColors.borderLight),
             Expanded(child: TextButton.icon(
               onPressed: _openWhatsApp,
               icon: const Icon(Icons.chat_rounded, size: 16),
-              label: const Text('WhatsApp',
-                  style: TextStyle(fontFamily: 'Poppins', fontSize: 13)),
+              label: Text(l.vendorsWhatsApp,
+                  style: const TextStyle(fontFamily: 'Poppins', fontSize: 13)),
               style: TextButton.styleFrom(foregroundColor: const Color(0xFF25D366)),
             )),
           ]),
@@ -312,27 +304,30 @@ class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.onRefresh});
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.store_rounded, size: 56,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? AppColors.darkTextTertiary : AppColors.textHint),
-      const SizedBox(height: 16),
-      const Text('No vendors found',
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 16,
-              fontWeight: FontWeight.w500)),
-      const SizedBox(height: 6),
-      const Text('Try a different city or search term',
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 13)),
-      const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: onRefresh,
-        icon: const Icon(Icons.refresh_rounded, size: 18),
-        label: const Text('Refresh',
-            style: TextStyle(fontFamily: 'Poppins')),
-      ),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(Icons.store_rounded, size: 56,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkTextTertiary : AppColors.textHint),
+        const SizedBox(height: 16),
+        Text(l.vendorsNoVendors,
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 16,
+                fontWeight: FontWeight.w500)),
+        const SizedBox(height: 6),
+        Text(l.vendorsNoVendorsSubtitle,
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 13)),
+        const SizedBox(height: 20),
+        OutlinedButton.icon(
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh_rounded, size: 18),
+          label: Text(l.vendorsRefresh,
+              style: const TextStyle(fontFamily: 'Poppins')),
+        ),
+      ]),
+    );
+  }
 }
 
 class _RegisterVendorSheet extends StatelessWidget {
@@ -340,6 +335,7 @@ class _RegisterVendorSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
@@ -354,14 +350,14 @@ class _RegisterVendorSheet extends StatelessWidget {
                 color: isDark ? AppColors.darkBorder : AppColors.border,
                 borderRadius: BorderRadius.circular(2))),
         const SizedBox(height: 20),
-        const Text('Register as a vendor',
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 18,
+        Text(l.vendorsRegisterSheet,
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 18,
                 fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
-        const Text(
-          'List your fish stall so customers can find you on FishCheck ZM.',
+        Text(
+          l.vendorsRegisterDesc,
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 13, height: 1.5),
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 13, height: 1.5),
         ),
         const SizedBox(height: 24),
         SizedBox(
@@ -369,20 +365,17 @@ class _RegisterVendorSheet extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
-              // Navigate to auth if not logged in
               if (!SupabaseConfig.isLoggedIn) {
                 context.push('/auth');
               } else {
-                // TODO: vendor registration form - Phase 5b
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(
-                      'Vendor registration form coming soon!')),
+                  SnackBar(content: Text(l.vendorsComingSoon)),
                 );
               }
             },
             icon: const Icon(Icons.store_rounded, size: 18),
-            label: const Text('Register my stall',
-                style: TextStyle(fontFamily: 'Poppins',
+            label: Text(l.vendorsRegisterButton,
+                style: const TextStyle(fontFamily: 'Poppins',
                     fontWeight: FontWeight.w600)),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -394,8 +387,8 @@ class _RegisterVendorSheet extends StatelessWidget {
         const SizedBox(height: 10),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Not now',
-              style: TextStyle(fontFamily: 'Poppins')),
+          child: Text(l.vendorsNotNow,
+              style: const TextStyle(fontFamily: 'Poppins')),
         ),
       ]),
     );

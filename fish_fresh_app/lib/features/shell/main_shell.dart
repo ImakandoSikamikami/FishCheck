@@ -3,27 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_router.dart';
+import '../../l10n/app_localizations.dart';
 
 class _NavDest {
   final String route;
   final IconData icon;
   final IconData activeIcon;
-  final String label;
   const _NavDest({
     required this.route,
     required this.icon,
     required this.activeIcon,
-    required this.label,
   });
 }
 
 const _destinations = [
-  _NavDest(route: AppRouter.home,     icon: Icons.home_outlined,       activeIcon: Icons.home_rounded,         label: 'Home'),
-  _NavDest(route: AppRouter.scan,     icon: Icons.camera_alt_outlined,  activeIcon: Icons.camera_alt_rounded,   label: 'Scan'),
-  _NavDest(route: AppRouter.vendors,  icon: Icons.store_outlined,       activeIcon: Icons.store_rounded,        label: 'Vendors'),
-  _NavDest(route: AppRouter.history,  icon: Icons.history_outlined,     activeIcon: Icons.history_rounded,      label: 'History'),
-  _NavDest(route: AppRouter.settings, icon: Icons.settings_outlined,    activeIcon: Icons.settings_rounded,     label: 'Settings'),
+  _NavDest(route: AppRouter.home,     icon: Icons.home_outlined,       activeIcon: Icons.home_rounded),
+  _NavDest(route: AppRouter.scan,     icon: Icons.camera_alt_outlined,  activeIcon: Icons.camera_alt_rounded),
+  _NavDest(route: AppRouter.vendors,  icon: Icons.store_outlined,       activeIcon: Icons.store_rounded),
+  _NavDest(route: AppRouter.history,  icon: Icons.history_outlined,     activeIcon: Icons.history_rounded),
+  _NavDest(route: AppRouter.settings, icon: Icons.settings_outlined,    activeIcon: Icons.settings_rounded),
 ];
+
+String _navLabel(int i, AppLocalizations l) => switch (i) {
+  0 => l.navHome,
+  1 => l.navScan,
+  2 => l.navVendors,
+  3 => l.navHistory,
+  _ => l.navSettings,
+};
 
 class MainShell extends StatelessWidget {
   final Widget child;
@@ -48,8 +55,7 @@ class MainShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     final index = _indexForLocation(location);
-    final wide = _isWide ||
-        MediaQuery.of(context).size.width > 700;
+    final wide = _isWide || MediaQuery.of(context).size.width > 700;
 
     if (wide) return _WideShell(child: child, index: index);
 
@@ -70,6 +76,7 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
@@ -115,7 +122,7 @@ class _BottomNav extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          d.label,
+                          _navLabel(i, l),
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 10,
@@ -145,11 +152,11 @@ class _WideShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Row(
         children: [
-          // Side rail
           Container(
             width: 220,
             decoration: BoxDecoration(
@@ -178,9 +185,9 @@ class _WideShell extends StatelessWidget {
                         child: const Icon(Icons.set_meal_rounded, color: AppColors.primary, size: 20),
                       ),
                       const SizedBox(width: 10),
-                      const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text('FishCheck ZM', style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w700)),
-                        Text('Freshness App', style: TextStyle(fontFamily: 'Poppins', fontSize: 11, color: AppColors.textTertiary)),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        const Text('FishCheck ZM', style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w700)),
+                        Text(l.shellSubtitle, style: const TextStyle(fontFamily: 'Poppins', fontSize: 11, color: AppColors.textTertiary)),
                       ]),
                     ]),
                   ),
@@ -202,7 +209,7 @@ class _WideShell extends StatelessWidget {
                           Icon(active ? d.activeIcon : d.icon, size: 20,
                               color: active ? AppColors.primary : AppColors.textTertiary),
                           const SizedBox(width: 12),
-                          Text(d.label, style: TextStyle(
+                          Text(_navLabel(i, l), style: TextStyle(
                             fontFamily: 'Poppins', fontSize: 14,
                             fontWeight: active ? FontWeight.w600 : FontWeight.w400,
                             color: active ? AppColors.primary : AppColors.textSecondary,
@@ -214,7 +221,7 @@ class _WideShell extends StatelessWidget {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text('FishCheck ZM · Instant Analysis',
+                    child: Text(l.shellFooter,
                         style: TextStyle(fontFamily: 'Poppins', fontSize: 11, color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary)),
                   ),
                 ],

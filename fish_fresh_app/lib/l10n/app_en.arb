@@ -1,0 +1,296 @@
+{
+  "@@locale": "en",
+
+  "cancel": "Cancel",
+  "clearAll": "Clear all",
+
+  "navHome": "Home",
+  "navScan": "Scan",
+  "navVendors": "Vendors",
+  "navHistory": "History",
+  "navSettings": "Settings",
+
+  "shellSubtitle": "Freshness App",
+  "shellFooter": "FishCheck ZM · Instant Analysis",
+
+  "homeGoodMorning": "Good morning",
+  "homeGoodAfternoon": "Good afternoon",
+  "homeGoodEvening": "Good evening",
+  "homeScansToday": "Scans today",
+  "homeFreshRate": "Fresh rate",
+  "homeTotalScans": "Total scans",
+  "homeScanAFish": "Scan a fish",
+  "homeMostScanned": "Your most scanned: {species}",
+  "@homeMostScanned": {
+    "placeholders": {
+      "species": {"type": "String"}
+    }
+  },
+  "homeTakeOrUpload": "Take or upload a photo",
+  "homeSpeciesGuide": "Species guide",
+  "homeScanHistory": "Scan history",
+  "homeRecentScans": "Recent scans",
+  "homeSeeAll": "See all",
+  "homeNoScansYet": "No scans yet",
+  "homeScanFirstFish": "Scan your first fish to get started",
+  "homeNoInternet": "No internet connection",
+  "homeOfflineQueued": "{count, plural, =1{No internet · {count} scan queued} other{No internet · {count} scans queued}}",
+  "@homeOfflineQueued": {
+    "placeholders": {
+      "count": {"type": "num"}
+    }
+  },
+  "homeOfflineReady": "{count, plural, =1{{count} offline scan ready to analyse} other{{count} offline scans ready to analyse}}",
+  "@homeOfflineReady": {
+    "placeholders": {
+      "count": {"type": "num"}
+    }
+  },
+  "homeAnalyseNow": "Analyse now",
+
+  "scanTitle": "Scan a fish",
+  "scanSubtitle": "Take a photo or upload from your gallery",
+  "scanTapToCamera": "Tap to open camera",
+  "scanOrUseButtons": "Or use the buttons below",
+  "scanWithCamera": "Scan with Camera",
+  "scanSelectPicture": "Select a Picture",
+  "scanAnalysing": "Analysing freshness...",
+  "scanAnalyse": "Analyse freshness",
+  "scanChooseDifferent": "Choose a different photo",
+  "scanErrorLoadImage": "Could not load image: {error}",
+  "@scanErrorLoadImage": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "scanErrorAnalysis": "Analysis failed. Please try a clearer photo.",
+  "scanTipClearEyes": "Clear eyes",
+  "scanTipShinySkin": "Shiny skin",
+  "scanTipRedGills": "Red gills",
+  "scanTipFirmFlesh": "Firm flesh",
+
+  "resultFreshnessScore": "Freshness score",
+  "resultVisualIndicators": "Visual indicators",
+  "resultAdvice": "Advice",
+  "resultSellBy": "Sell by",
+  "resultSafeToEat": "Safe to eat",
+  "resultDoNotEat": "Do not eat",
+  "resultAnalysisPending": "Analysis pending",
+  "resultPendingSubtitle": "Saved — will analyse when reconnected.",
+  "resultEyes": "Eyes",
+  "resultSkin": "Skin",
+  "resultGills": "Gills",
+  "resultFlesh": "Flesh",
+  "resultOdour": "Odour",
+  "resultScanAnother": "Scan another fish",
+  "resultViewHistory": "View scan history",
+  "resultConfidentDesktop": "{confidence}% confident in species ID",
+  "@resultConfidentDesktop": {
+    "placeholders": {
+      "confidence": {"type": "int"}
+    }
+  },
+  "resultConfidentMobile": "{confidence}% confident",
+  "@resultConfidentMobile": {
+    "placeholders": {
+      "confidence": {"type": "int"}
+    }
+  },
+  "resultShareSubject": "Freshness report — {fishType}",
+  "@resultShareSubject": {
+    "placeholders": {
+      "fishType": {"type": "String"}
+    }
+  },
+  "resultShareBody": "FishCheck ZM — Freshness Report\nFish: {fishType}\nFreshness: {freshness} ({score}%)\nSell by: {sellBy}\nSafe: {safe}\nAdvice: {advice}\nScanned: {scanned}\nFishCheck ZM",
+  "@resultShareBody": {
+    "placeholders": {
+      "fishType": {"type": "String"},
+      "freshness": {"type": "String"},
+      "score": {"type": "int"},
+      "sellBy": {"type": "String"},
+      "safe": {"type": "String"},
+      "advice": {"type": "String"},
+      "scanned": {"type": "String"}
+    }
+  },
+  "resultShareYes": "Yes",
+  "resultShareNo": "No",
+  "resultPricePrefix": "Price: {impact}",
+  "@resultPricePrefix": {
+    "placeholders": {
+      "impact": {"type": "String"}
+    }
+  },
+
+  "historyTitle": "Scan history",
+  "historyClearAllTooltip": "Clear all",
+  "historySearch": "Search by fish name...",
+  "historyFilterAll": "All",
+  "historyFilterFresh": "Fresh",
+  "historyFilterAcceptable": "Acceptable",
+  "historyFilterPoor": "Poor",
+  "historyFilterSpoiled": "Spoiled",
+  "historyNoScansYet": "No scans yet",
+  "historyNoScansSubtitle": "Analyse a fish to see your history here",
+  "historyNoResults": "No {filter} scans found",
+  "@historyNoResults": {
+    "placeholders": {
+      "filter": {"type": "String"}
+    }
+  },
+  "historyScore": "score",
+  "historyClearTitle": "Clear all history",
+  "historyClearContent": "This will delete all scan records. This cannot be undone.",
+
+  "settingsTitle": "Settings",
+  "settingsAccount": "Account",
+  "settingsScansToCloud": "Scans synced to cloud",
+  "settingsSignOut": "Sign out",
+  "settingsHistoryOnDevice": "History stays on this device",
+  "settingsSignIn": "Sign in or create account",
+  "settingsSyncAcrossDevices": "Sync scans across devices",
+  "settingsNotifications": "Notifications",
+  "settingsEnableReminders": "Enable reminders",
+  "settingsRemindersSubtitle": "Get reminded to re-check fish after 24 hours",
+  "settingsNotificationsEnabled": "Notifications enabled!",
+  "settingsNotificationsDisabled": "Please enable notifications in device settings.",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "settingsThemeSubtitle": "Choose light, dark, or follow system",
+  "settingsMachineLearning": "Machine learning",
+  "settingsAiProgress": "AI learning progress",
+  "settingsAiProgressSubtitle": "View species corrections and model accuracy",
+  "settingsAnalysisEngine": "Analysis engine",
+  "settingsAnalysisEngineSubtitle": "On-device image analysis — works offline",
+  "settingsData": "Data",
+  "settingsClearHistory": "Clear scan history",
+  "settingsClearHistorySubtitle": "Remove all past fish scans from this device",
+  "settingsClearHistoryDialog": "Clear history",
+  "settingsClearHistoryContent": "Delete all scan history? This cannot be undone.",
+  "settingsClearHistorySuccess": "Scan history cleared",
+  "settingsAbout": "About",
+  "settingsAboutApp": "About FishCheck ZM",
+  "settingsAboutSubtitle": "Version, mission, credits",
+  "settingsSpeciesSupported": "Species supported",
+  "settingsSpeciesSubtitle": "Kapenta · Bream · Tiger fish · Mpumbu · Chessa · Vundu",
+  "settingsFishVendors": "Fish vendors",
+  "settingsVendorsSubtitle": "Browse vendors near you",
+  "settingsFooter": "FishCheck ZM · v1.0.0 · ",
+  "settingsLanguage": "Language",
+  "settingsLanguageSubtitle": "Choose your preferred language",
+
+  "vendorsTitle": "Fish vendors",
+  "vendorsRegisterTooltip": "Register as vendor",
+  "vendorsSearch": "Search vendors or markets...",
+  "vendorsNoVendors": "No vendors found",
+  "vendorsNoVendorsSubtitle": "Try a different city or search term",
+  "vendorsRefresh": "Refresh",
+  "vendorsCall": "Call",
+  "vendorsWhatsApp": "WhatsApp",
+  "vendorScans": "{count} scans",
+  "@vendorScans": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "vendorsRegisterSheet": "Register as a vendor",
+  "vendorsRegisterDesc": "List your fish stall so customers can find you on FishCheck ZM.",
+  "vendorsRegisterButton": "Register my stall",
+  "vendorsNotNow": "Not now",
+  "vendorsComingSoon": "Vendor registration form coming soon!",
+
+  "authCreateAccount": "Create account",
+  "authWelcomeBack": "Welcome back",
+  "authSignUpSubtitle": "Sign up to save your scans and sync across devices",
+  "authSignInSubtitle": "Sign in to access your scan history",
+  "authEnterEmailFirst": "Enter your email address first.",
+  "authPasswordResetSent": "Password reset email sent. Check your inbox.",
+  "authFullName": "Full name",
+  "authNameRequired": "Name is required",
+  "authPhone": "Phone (optional)",
+  "authEmail": "Email address",
+  "authEmailRequired": "Email is required",
+  "authEmailInvalid": "Enter a valid email",
+  "authPassword": "Password",
+  "authPasswordRequired": "Password is required",
+  "authPasswordTooShort": "Password must be at least 8 characters",
+  "authForgotPassword": "Forgot password?",
+  "authSignIn": "Sign in",
+  "authAlreadyHaveAccount": "Already have an account? Sign in",
+  "authDontHaveAccount": "Don't have an account? Sign up",
+  "authContinueWithout": "Continue without account",
+
+  "onboardingSkip": "Skip",
+  "onboardingGetStarted": "Get started",
+  "onboardingContinue": "Continue",
+  "onboarding1Title": "Know your fish is fresh",
+  "onboarding1Subtitle": "Point your camera at any fish and get an instant AI-powered freshness report. Eyes, skin, gills — analysed in seconds.",
+  "onboarding2Title": "Camera or gallery — your choice",
+  "onboarding2Subtitle": "Take a live photo at the market or upload one from your gallery. Every image format supported. Results work even on slow internet.",
+  "onboarding3Title": "Built for Zambian markets",
+  "onboarding3Subtitle": "Kapenta, Bream, Tiger fish, Mpumbu, Chessa, Vundu — the app knows all local species with local names and fair price ranges.",
+
+  "speciesTitle": "Fish directory",
+  "speciesSearch": "Search species or local name...",
+  "speciesSignsOfFreshness": "Signs of freshness",
+  "speciesSpoilageWarning": "Spoilage warning signs",
+  "speciesCookingTip": "Cooking tip",
+  "speciesHabitat": "Habitat",
+  "speciesBestSeason": "Best season",
+  "speciesMarketPrice": "Market price",
+
+  "kapentaName": "Kapenta",
+  "kapentaHabitat": "Lakes Tanganyika & Kariba",
+  "kapentaSeason": "Year-round",
+  "kapentaPriceRange": "ZMW 20–60/kg (fresh) · ZMW 80–150/kg (dried)",
+  "kapentaDescription": "Tiny freshwater sardines — the most commercially important fish in Zambia. Sold fresh or sun-dried. Dried kapenta is a staple across all provinces.",
+  "kapentaFreshIndicators": "Fresh kapenta: silver sheen, clear eyes, mild sea smell. Dried kapenta: uniform light-brown colour, dry to touch, no mould, mild smell.",
+  "kapentaSpoilageWarning": "Yellowish colour, strong fishy odour, or stickiness on fresh kapenta means it is no longer safe. Dried kapenta with dark patches or visible mould should be discarded.",
+  "kapentaCookingTip": "Best fried crispy with onions and tomatoes, or simmered in groundnut relish (nshima accompaniment).",
+
+  "breamName": "Bream (Tilapia)",
+  "breamHabitat": "Most freshwater bodies",
+  "breamSeason": "Year-round",
+  "breamPriceRange": "ZMW 35–100/kg",
+  "breamDescription": "The most widely consumed fish in Zambia. Found in rivers, dams and lakes nationwide. Available in nearly every market, often sold live.",
+  "breamFreshIndicators": "Bright red or deep pink gills, clear bulging eyes, firm flesh that springs back when pressed, shiny silver-green skin with tight scales.",
+  "breamSpoilageWarning": "Brown or grey gills, sunken or cloudy eyes, soft mushy flesh, and strong sour smell are all clear signs of deterioration.",
+  "breamCookingTip": "Excellent grilled whole with tomatoes and onions, or fried. Commonly used in Zambian relish.",
+
+  "tigerName": "Tiger fish",
+  "tigerHabitat": "Zambezi River, Lake Kariba",
+  "tigerSeason": "Best Aug–Oct",
+  "tigerPriceRange": "ZMW 60–140/kg",
+  "tigerDescription": "Fierce predatory fish from the Zambezi and Lake Kariba. Prized for its firm, white flesh. Popular with sport anglers and a delicacy at markets near Kariba.",
+  "tigerFreshIndicators": "Distinctive silver body with black tiger stripes. Bright eyes, firm white flesh, and a mild fresh smell. Teeth remain prominent and jaw is well-defined.",
+  "tigerSpoilageWarning": "Fading stripes, dull discoloured skin, loose scales and a strong ammonia-like smell indicate the fish is past its best.",
+  "tigerCookingTip": "Best grilled or baked whole with lemon and herbs. The firm flesh holds well on a braai.",
+
+  "mpumbuName": "Mpumbu",
+  "mpumbuHabitat": "Lake Bangweulu",
+  "mpumbuSeason": "Jun–Oct",
+  "mpumbuPriceRange": "ZMW 50–120/kg",
+  "mpumbuDescription": "A prized, large lake fish endemic to Lake Bangweulu. Highly valued by local communities and often dried or smoked. Scarcity makes it relatively expensive.",
+  "mpumbuFreshIndicators": "Deep silver body with prominent scales. Clear eyes, bright red-pink gills, and firm iridescent flesh. Fresh specimens have almost no smell.",
+  "mpumbuSpoilageWarning": "Any discolouration of the flesh from white to yellowish, combined with a sour or strong fishy odour, indicates spoilage.",
+  "mpumbuCookingTip": "Wonderful smoked or grilled. The flavour is rich — pairs well with simple seasoning to let the fish shine.",
+
+  "chessaName": "Chessa",
+  "chessaHabitat": "Lakes Bangweulu & Mweru",
+  "chessaSeason": "Year-round",
+  "chessaPriceRange": "ZMW 25–70/kg",
+  "chessaDescription": "A medium-sized lake fish common in Lake Bangweulu and Lake Mweru. Often sold dried in bulk. An important protein source in Northern and Luapula provinces.",
+  "chessaFreshIndicators": "Silvery skin with firm texture. Clear eyes and tight intact scales. Fresh smell with no sourness. Dried chessa should be golden-brown and dry throughout.",
+  "chessaSpoilageWarning": "Soft spots on the flesh, visible slime on the skin, cloudy eyes, or an ammonia-like odour are all signs to avoid.",
+  "chessaCookingTip": "Usually fried or dried and powdered as a flavouring. Works well in stews and nshima relish.",
+
+  "vunduName": "Vundu (Catfish)",
+  "vunduHabitat": "Zambezi River & major rivers",
+  "vunduSeason": "Year-round",
+  "vunduPriceRange": "ZMW 40–100/kg",
+  "vunduDescription": "Large freshwater catfish found in the Zambezi and Kafue rivers. Can grow very large — up to 50kg. Has no scales. Excellent firm white flesh, popular for smoking.",
+  "vunduFreshIndicators": "Moist, slightly slimy skin (normal for catfish). Firm pale flesh, clear eyes, and mild fresh smell with no sourness.",
+  "vunduSpoilageWarning": "Excessive stickiness, yellowing of the flesh, strong ammonia smell, or visibly soft flesh are warning signs.",
+  "vunduCookingTip": "Superb smoked, grilled in large cuts, or curried. The thick flesh is very forgiving to cook."
+}

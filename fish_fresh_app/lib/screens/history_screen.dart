@@ -6,6 +6,7 @@ import '../core/app_colors.dart';
 import '../models/freshness_result.dart';
 import '../services/history_service.dart';
 import '../widgets/freshness_widgets.dart';
+import '../l10n/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -38,21 +39,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<void> _clearAll() async {
+    final l = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Clear all history',
-            style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600)),
-        content: const Text('This will delete all scan records. This cannot be undone.',
-            style: TextStyle(fontFamily: 'Poppins')),
+        title: Text(l.historyClearTitle,
+            style: const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600)),
+        content: Text(l.historyClearContent,
+            style: const TextStyle(fontFamily: 'Poppins')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(fontFamily: 'Poppins')),
+            child: Text(l.cancel, style: const TextStyle(fontFamily: 'Poppins')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Clear all',
+            child: Text(l.clearAll,
                 style: TextStyle(fontFamily: 'Poppins', color: AppColors.spoiled,
                     fontWeight: FontWeight.w600)),
           ),
@@ -70,17 +72,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return _history.where((r) => r.freshness.name == _filter).toList();
   }
 
+  String _localizedFilterName(String filter, AppLocalizations l) => switch (filter) {
+    'fresh'      => l.historyFilterFresh,
+    'acceptable' => l.historyFilterAcceptable,
+    'poor'       => l.historyFilterPoor,
+    'spoiled'    => l.historyFilterSpoiled,
+    _            => filter,
+  };
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan history'),
+        title: Text(l.historyTitle),
         actions: [
           if (_history.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_sweep_rounded),
-              tooltip: 'Clear all',
+              tooltip: l.historyClearAllTooltip,
               onPressed: _clearAll,
             ),
         ],
@@ -88,7 +98,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _history.isEmpty && _searchQuery.isEmpty
-              ? const _EmptyState()
+              ? _EmptyState()
               : Column(children: [
                   // Search bar
                   Padding(
@@ -99,7 +109,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         _load();
                       },
                       decoration: InputDecoration(
-                        hintText: 'Search by fish name...',
+                        hintText: l.historySearch,
                         hintStyle: const TextStyle(fontFamily: 'Poppins'),
                         prefixIcon: const Icon(Icons.search_rounded, size: 20),
                         suffixIcon: _searchQuery.isNotEmpty
@@ -126,7 +136,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       onRefresh: _load,
                       color: AppColors.primary,
                       child: _filtered.isEmpty
-                          ? _NoResultsState(filter: _filter)
+                          ? Center(
+                              child: Text(
+                                l.historyNoResults(_localizedFilterName(_filter, l)),
+                                style: const TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                              ),
+                            )
                           : ListView.builder(
                               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                               itemCount: _filtered.length,
@@ -154,22 +169,22 @@ class _FilterRow extends StatelessWidget {
   final ValueChanged<String> onChanged;
   const _FilterRow({required this.selected, required this.onChanged});
 
-  static const _chips = [
-    ('all', 'All'),
-    ('fresh', 'Fresh'),
-    ('acceptable', 'Acceptable'),
-    ('poor', 'Poor'),
-    ('spoiled', 'Spoiled'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    final chips = [
+      ('all',        l.historyFilterAll),
+      ('fresh',      l.historyFilterFresh),
+      ('acceptable', l.historyFilterAcceptable),
+      ('poor',       l.historyFilterPoor),
+      ('spoiled',    l.historyFilterSpoiled),
+    ];
     return SizedBox(
       height: 48,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: _chips.map((c) {
+        children: chips.map((c) {
           final active = selected == c.$1;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -208,6 +223,7 @@ class _HistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final color = FreshnessColors.forLevel(result.freshness);
     return Dismissible(
@@ -238,7 +254,6 @@ class _HistoryTile extends StatelessWidget {
             ),
           ),
           child: Row(children: [
-            // Thumbnail
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: result.imageBytes != null
@@ -268,7 +283,7 @@ class _HistoryTile extends StatelessWidget {
               Text('${result.score}%',
                   style: TextStyle(fontFamily: 'Poppins', fontSize: 18,
                       fontWeight: FontWeight.w700, color: color)),
-              Text('score',
+              Text(l.historyScore,
                   style: TextStyle(fontFamily: 'Poppins', fontSize: 10,
                       color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary)),
             ]),
@@ -279,34 +294,26 @@ class _HistoryTile extends StatelessWidget {
   }
 }
 
-// ─── Empty states ─────────────────────────────────────────────────────────────
+// ─── Empty state ──────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState();
   @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.history_rounded, size: 64,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? AppColors.darkTextTertiary : AppColors.textHint),
-      const SizedBox(height: 16),
-      const Text('No scans yet',
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 16, fontWeight: FontWeight.w500)),
-      const SizedBox(height: 6),
-      Text('Analyse a fish to see your history here',
-          style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.darkTextTertiary : AppColors.textTertiary)),
-    ]),
-  );
-}
-
-class _NoResultsState extends StatelessWidget {
-  final String filter;
-  const _NoResultsState({required this.filter});
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Text('No $filter scans found',
-        style: const TextStyle(fontFamily: 'Poppins', fontSize: 14)),
-  );
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(Icons.history_rounded, size: 64,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkTextTertiary : AppColors.textHint),
+        const SizedBox(height: 16),
+        Text(l.historyNoScansYet,
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 16, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 6),
+        Text(l.historyNoScansSubtitle,
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkTextTertiary : AppColors.textTertiary)),
+      ]),
+    );
+  }
 }

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,6 +9,8 @@ import '../platform/image_pipeline.dart';
 import '../services/tflite_freshness_service.dart';
 import '../services/history_service.dart';
 import '../services/offline_queue_service.dart';
+import '../l10n/app_localizations.dart';
+
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
   @override
@@ -22,27 +23,24 @@ class _ScanScreenState extends State<ScanScreen> {
 
   bool get _hasImage => _picked != null;
 
-  // ─── Pick image ────────────────────────────────────────────────────────────
-
   Future<void> _pickImage(ImageSourceType source) async {
+    final l = AppLocalizations.of(context)!;
     try {
       final result = await ImagePipeline.pick(source);
       if (result == null) return;
       if (mounted) setState(() => _picked = result);
     } catch (e) {
-      if (mounted) _showError('Could not load image: $e');
+      if (mounted) _showError(l.scanErrorLoadImage(e.toString()));
     }
   }
 
-  // ─── Analyse ───────────────────────────────────────────────────────────────
-
   Future<void> _analyse() async {
     if (_picked == null) return;
+    final l = AppLocalizations.of(context)!;
     setState(() => _analysing = true);
     HapticFeedback.lightImpact();
 
-try {
-      // Analyse using TFLite model — no internet or API key needed
+    try {
       final result = await TfliteAnalysisService.analyseBytes(
           _picked!.bytes, _picked!.mediaType);
       await HistoryService.saveResult(result);
@@ -51,7 +49,7 @@ try {
             extra: {'result': result, 'bytes': _picked!.bytes});
       }
     } catch (e) {
-      if (mounted) _showError('Analysis failed. Please try a clearer photo.');
+      if (mounted) _showError(l.scanErrorAnalysis);
     } finally {
       if (mounted) setState(() => _analysing = false);
     }
@@ -68,20 +66,14 @@ try {
     ));
   }
 
-  // ─── Build ─────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     return _hasImage ? _buildPreview() : _buildPickerView();
   }
 
-  // ─── Picker view (no image yet) ────────────────────────────────────────────
-
   Widget _buildPickerView() {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isMobile = !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.iOS);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
@@ -93,25 +85,21 @@ try {
             children: [
               const SizedBox(height: 12),
 
-              // Header
-              Text('Scan a fish',
+              Text(l.scanTitle,
                       style: Theme.of(context).textTheme.headlineMedium)
                   .animate()
                   .fadeIn(duration: 300.ms),
               const SizedBox(height: 4),
-              Text('Take a photo or upload from your gallery',
+              Text(l.scanSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium)
                   .animate(delay: 50.ms)
                   .fadeIn(duration: 300.ms),
 
               const SizedBox(height: 32),
 
-              // Large tap target
               Expanded(
                 child: GestureDetector(
-                  onTap: () => isMobile
-                      ? _showSourceSheet()
-                      : _pickImage(ImageSourceType.gallery),
+                  onTap: () => _pickImage(ImageSourceType.camera),
                   child: AnimatedContainer(
                     duration: 200.ms,
                     decoration: BoxDecoration(
@@ -139,9 +127,7 @@ try {
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          isMobile
-                              ? 'Tap to take or upload a photo'
-                              : 'Click to upload a fish photo',
+                          l.scanTapToCamera,
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -149,9 +135,7 @@ try {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          isMobile
-                              ? 'Works best with clear, well-lit photos'
-                              : 'JPG · PNG · WEBP · HEIC · BMP · GIF',
+                          l.scanOrUseButtons,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -165,36 +149,26 @@ try {
 
               const SizedBox(height: 16),
 
-              // Button row
-              if (isMobile) ...[
-                Row(children: [
-                  Expanded(
-                    child: _PickButton(
-                      icon: Icons.camera_alt_rounded,
-                      label: 'Camera',
-                      onTap: () => _pickImage(ImageSourceType.camera),
-                    ),
+              Row(children: [
+                Expanded(
+                  child: _PickButton(
+                    icon: Icons.camera_alt_rounded,
+                    label: l.scanWithCamera,
+                    onTap: () => _pickImage(ImageSourceType.camera),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _PickButton(
-                      icon: Icons.photo_library_rounded,
-                      label: 'Gallery',
-                      onTap: () => _pickImage(ImageSourceType.gallery),
-                    ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _PickButton(
+                    icon: Icons.photo_library_rounded,
+                    label: l.scanSelectPicture,
+                    onTap: () => _pickImage(ImageSourceType.gallery),
                   ),
-                ]).animate(delay: 200.ms).fadeIn(duration: 300.ms),
-              ] else ...[
-                _PickButton(
-                  icon: Icons.upload_file_rounded,
-                  label: 'Choose image file',
-                  onTap: () => _pickImage(ImageSourceType.gallery),
-                ).animate(delay: 200.ms).fadeIn(duration: 300.ms),
-              ],
+                ),
+              ]).animate(delay: 200.ms).fadeIn(duration: 300.ms),
 
               const SizedBox(height: 16),
 
-              // Tips
               _TipsRow().animate(delay: 300.ms).fadeIn(duration: 300.ms),
 
               const SizedBox(height: 8),
@@ -205,80 +179,18 @@ try {
     );
   }
 
-  void _showSourceSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Container(
-              width: 40, height: 4,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2)),
-            ),
-            ListTile(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              leading: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: AppColors.primarySurface,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Icon(Icons.camera_alt_rounded,
-                    color: AppColors.primary),
-              ),
-              title: const Text('Take a photo',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
-              subtitle: const Text('Use your device camera'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSourceType.camera);
-              },
-            ),
-            const SizedBox(height: 4),
-            ListTile(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              leading: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: AppColors.primarySurface,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Icon(Icons.photo_library_rounded,
-                    color: AppColors.primary),
-              ),
-              title: const Text('Choose from gallery',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
-              subtitle: const Text('Pick an existing photo'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(ImageSourceType.gallery);
-              },
-            ),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  // ─── Preview view (image selected) ────────────────────────────────────────
-
   Widget _buildPreview() {
+    final l = AppLocalizations.of(context)!;
     final img = _picked!;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(children: [
-        // Full-screen image
         Positioned.fill(
           child: Image.memory(img.bytes, fit: BoxFit.cover)
               .animate()
               .fadeIn(duration: 300.ms),
         ),
 
-        // Gradient overlay at bottom
         Positioned(
           bottom: 0, left: 0, right: 0,
           child: Container(
@@ -296,7 +208,6 @@ try {
           ),
         ),
 
-        // Back button top-left
         Positioned(
           top: 0, left: 0, right: 0,
           child: SafeArea(
@@ -312,7 +223,6 @@ try {
           ),
         ),
 
-        // Bottom controls
         Positioned(
           bottom: 0, left: 0, right: 0,
           child: SafeArea(
@@ -322,7 +232,6 @@ try {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // File info
                   if (img.filename != null)
                     Container(
                       margin: const EdgeInsets.only(bottom: 14),
@@ -344,7 +253,6 @@ try {
                       ]),
                     ),
 
-                  // Analyse button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -360,28 +268,28 @@ try {
                         elevation: 0,
                       ),
                       child: _analysing
-                          ? const Row(
+                          ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   width: 20, height: 20,
                                   child: CircularProgressIndicator(
                                       strokeWidth: 2, color: Colors.white),
                                 ),
-                                SizedBox(width: 12),
-                                Text('Analysing freshness...',
-                                    style: TextStyle(
+                                const SizedBox(width: 12),
+                                Text(l.scanAnalysing,
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
                               ],
                             )
-                          : const Row(
+                          : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.biotech_rounded, size: 20),
-                                SizedBox(width: 10),
-                                Text('Analyse freshness',
-                                    style: TextStyle(
+                                const Icon(Icons.biotech_rounded, size: 20),
+                                const SizedBox(width: 10),
+                                Text(l.scanAnalyse,
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
                               ],
@@ -391,15 +299,14 @@ try {
 
                   const SizedBox(height: 10),
 
-                  // Retake
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: _retake,
                       icon: const Icon(Icons.refresh_rounded,
                           size: 18, color: Colors.white70),
-                      label: const Text('Choose a different photo',
-                          style: TextStyle(color: Colors.white70)),
+                      label: Text(l.scanChooseDifferent,
+                          style: const TextStyle(color: Colors.white70)),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                             color: Colors.white.withOpacity(0.3)),
@@ -419,8 +326,6 @@ try {
     );
   }
 }
-
-// ─── Small widgets ────────────────────────────────────────────────────────────
 
 class _PickButton extends StatelessWidget {
   final IconData icon;
@@ -446,9 +351,12 @@ class _PickButton extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(icon, size: 18, color: AppColors.primary),
           const SizedBox(width: 8),
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w500)),
+          Flexible(
+            child: Text(label,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w500)),
+          ),
         ]),
       ),
     );
@@ -475,18 +383,18 @@ class _CircleIconButton extends StatelessWidget {
 }
 
 class _TipsRow extends StatelessWidget {
-  static const _tips = [
-    (Icons.visibility_rounded, 'Clear eyes'),
-    (Icons.water_drop_rounded, 'Shiny skin'),
-    (Icons.air_rounded, 'Red gills'),
-    (Icons.touch_app_rounded, 'Firm flesh'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tips = [
+      (Icons.visibility_rounded,  l.scanTipClearEyes),
+      (Icons.water_drop_rounded,  l.scanTipShinySkin),
+      (Icons.air_rounded,         l.scanTipRedGills),
+      (Icons.touch_app_rounded,   l.scanTipFirmFlesh),
+    ];
     return Row(
-      children: _tips.map((t) => Expanded(
+      children: tips.map((t) => Expanded(
         child: Container(
           margin: const EdgeInsets.only(right: 6),
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),

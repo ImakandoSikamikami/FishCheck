@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../core/app_colors.dart';
+import '../l10n/app_localizations.dart';
 
 class SpeciesScreen extends StatefulWidget {
   const SpeciesScreen({super.key});
@@ -29,101 +30,90 @@ class _SpeciesData {
   });
 }
 
-const _allSpecies = [
+List<_SpeciesData> _buildSpecies(AppLocalizations l) => [
   _SpeciesData(
-    name: 'Kapenta', emoji: '🐟',
-    color: Color(0xFF185FA5),
-    localNames: ['Kapenta', 'Ndakala', 'Matemba'],
-    habitat: 'Lakes Tanganyika & Kariba',
-    season: 'Year-round',
-    priceRange: 'ZMW 20–60/kg (fresh) · ZMW 80–150/kg (dried)',
-    description: 'Tiny freshwater sardines — the most commercially important fish in Zambia. '
-        'Sold fresh or sun-dried. Dried kapenta is a staple across all provinces.',
-    freshIndicators: 'Fresh kapenta: silver sheen, clear eyes, mild sea smell. '
-        'Dried kapenta: uniform light-brown colour, dry to touch, no mould, mild smell.',
-    spoilageWarning: 'Yellowish colour, strong fishy odour, or stickiness on fresh kapenta means it is no longer safe. '
-        'Dried kapenta with dark patches or visible mould should be discarded.',
-    cookingTip: 'Best fried crispy with onions and tomatoes, or simmered in groundnut relish (nshima accompaniment).',
+    name: l.kapentaName, emoji: '🐟',
+    color: const Color(0xFF185FA5),
+    localNames: const ['Kapenta', 'Ndakala', 'Matemba'],
+    habitat: l.kapentaHabitat,
+    season: l.kapentaSeason,
+    priceRange: l.kapentaPriceRange,
+    description: l.kapentaDescription,
+    freshIndicators: l.kapentaFreshIndicators,
+    spoilageWarning: l.kapentaSpoilageWarning,
+    cookingTip: l.kapentaCookingTip,
   ),
   _SpeciesData(
-    name: 'Bream (Tilapia)', emoji: '🐠',
-    color: Color(0xFF0A7B5C),
-    localNames: ['Brim', 'Tilapia', 'Ngumbu', 'Chisense'],
-    habitat: 'Most freshwater bodies',
-    season: 'Year-round',
-    priceRange: 'ZMW 35–100/kg',
-    description: 'The most widely consumed fish in Zambia. Found in rivers, dams and lakes nationwide. '
-        'Available in nearly every market, often sold live.',
-    freshIndicators: 'Bright red or deep pink gills, clear bulging eyes, firm flesh that springs back when pressed, '
-        'shiny silver-green skin with tight scales.',
-    spoilageWarning: 'Brown or grey gills, sunken or cloudy eyes, soft mushy flesh, and strong sour smell '
-        'are all clear signs of deterioration.',
-    cookingTip: 'Excellent grilled whole with tomatoes and onions, or fried. Commonly used in Zambian relish.',
+    name: l.breamName, emoji: '🐠',
+    color: const Color(0xFF0A7B5C),
+    localNames: const ['Brim', 'Tilapia', 'Ngumbu', 'Chisense'],
+    habitat: l.breamHabitat,
+    season: l.breamSeason,
+    priceRange: l.breamPriceRange,
+    description: l.breamDescription,
+    freshIndicators: l.breamFreshIndicators,
+    spoilageWarning: l.breamSpoilageWarning,
+    cookingTip: l.breamCookingTip,
   ),
   _SpeciesData(
-    name: 'Tiger fish', emoji: '🦷',
-    color: Color(0xFF854F0B),
-    localNames: ['Nkupi', 'Mupende', 'Mputi'],
-    habitat: 'Zambezi River, Lake Kariba',
-    season: 'Best Aug–Oct',
-    priceRange: 'ZMW 60–140/kg',
-    description: 'Fierce predatory fish from the Zambezi and Lake Kariba. Prized for its firm, '
-        'white flesh. Popular with sport anglers and a delicacy at markets near Kariba.',
-    freshIndicators: 'Distinctive silver body with black tiger stripes. Bright eyes, firm white flesh, '
-        'and a mild fresh smell. Teeth remain prominent and jaw is well-defined.',
-    spoilageWarning: 'Fading stripes, dull discoloured skin, loose scales and a strong ammonia-like smell '
-        'indicate the fish is past its best.',
-    cookingTip: 'Best grilled or baked whole with lemon and herbs. The firm flesh holds well on a braai.',
+    name: l.tigerName, emoji: '🦷',
+    color: const Color(0xFF854F0B),
+    localNames: const ['Nkupi', 'Mupende', 'Mputi'],
+    habitat: l.tigerHabitat,
+    season: l.tigerSeason,
+    priceRange: l.tigerPriceRange,
+    description: l.tigerDescription,
+    freshIndicators: l.tigerFreshIndicators,
+    spoilageWarning: l.tigerSpoilageWarning,
+    cookingTip: l.tigerCookingTip,
   ),
   _SpeciesData(
-    name: 'Mpumbu', emoji: '🐡',
-    color: Color(0xFF534AB7),
-    localNames: ['Mpumbu', 'Mupumbu'],
-    habitat: 'Lake Bangweulu',
-    season: 'Jun–Oct',
-    priceRange: 'ZMW 50–120/kg',
-    description: 'A prized, large lake fish endemic to Lake Bangweulu. Highly valued by local communities '
-        'and often dried or smoked. Scarcity makes it relatively expensive.',
-    freshIndicators: 'Deep silver body with prominent scales. Clear eyes, bright red-pink gills, and '
-        'firm iridescent flesh. Fresh specimens have almost no smell.',
-    spoilageWarning: 'Any discolouration of the flesh from white to yellowish, combined with a sour or '
-        'strong fishy odour, indicates spoilage.',
-    cookingTip: 'Wonderful smoked or grilled. The flavour is rich — pairs well with simple seasoning to let the fish shine.',
+    name: l.mpumbuName, emoji: '🐡',
+    color: const Color(0xFF534AB7),
+    localNames: const ['Mpumbu', 'Mupumbu'],
+    habitat: l.mpumbuHabitat,
+    season: l.mpumbuSeason,
+    priceRange: l.mpumbuPriceRange,
+    description: l.mpumbuDescription,
+    freshIndicators: l.mpumbuFreshIndicators,
+    spoilageWarning: l.mpumbuSpoilageWarning,
+    cookingTip: l.mpumbuCookingTip,
   ),
   _SpeciesData(
-    name: 'Chessa', emoji: '🐟',
-    color: Color(0xFF3B6D11),
-    localNames: ['Chessa', 'Lisabi', 'Chisense'],
-    habitat: 'Lakes Bangweulu & Mweru',
-    season: 'Year-round',
-    priceRange: 'ZMW 25–70/kg',
-    description: 'A medium-sized lake fish common in Lake Bangweulu and Lake Mweru. '
-        'Often sold dried in bulk. An important protein source in Northern and Luapula provinces.',
-    freshIndicators: 'Silvery skin with firm texture. Clear eyes and tight intact scales. '
-        'Fresh smell with no sourness. Dried chessa should be golden-brown and dry throughout.',
-    spoilageWarning: 'Soft spots on the flesh, visible slime on the skin, cloudy eyes, '
-        'or an ammonia-like odour are all signs to avoid.',
-    cookingTip: 'Usually fried or dried and powdered as a flavouring. Works well in stews and nshima relish.',
+    name: l.chessaName, emoji: '🐟',
+    color: const Color(0xFF3B6D11),
+    localNames: const ['Chessa', 'Lisabi', 'Chisense'],
+    habitat: l.chessaHabitat,
+    season: l.chessaSeason,
+    priceRange: l.chessaPriceRange,
+    description: l.chessaDescription,
+    freshIndicators: l.chessaFreshIndicators,
+    spoilageWarning: l.chessaSpoilageWarning,
+    cookingTip: l.chessaCookingTip,
   ),
   _SpeciesData(
-    name: 'Vundu (Catfish)', emoji: '🐟',
-    color: Color(0xFF5F5E5A),
-    localNames: ['Vundu', 'Mamba', 'Kampoyo', 'Pale'],
-    habitat: 'Zambezi River & major rivers',
-    season: 'Year-round',
-    priceRange: 'ZMW 40–100/kg',
-    description: 'Large freshwater catfish found in the Zambezi and Kafue rivers. Can grow very large — '
-        'up to 50kg. Has no scales. Excellent firm white flesh, popular for smoking.',
-    freshIndicators: 'Moist, slightly slimy skin (normal for catfish). Firm pale flesh, '
-        'clear eyes, and mild fresh smell with no sourness.',
-    spoilageWarning: 'Excessive stickiness, yellowing of the flesh, strong ammonia smell, '
-        'or visibly soft flesh are warning signs.',
-    cookingTip: 'Superb smoked, grilled in large cuts, or curried. The thick flesh is very forgiving to cook.',
+    name: l.vunduName, emoji: '🐟',
+    color: const Color(0xFF5F5E5A),
+    localNames: const ['Vundu', 'Mamba', 'Kampoyo', 'Pale'],
+    habitat: l.vunduHabitat,
+    season: l.vunduSeason,
+    priceRange: l.vunduPriceRange,
+    description: l.vunduDescription,
+    freshIndicators: l.vunduFreshIndicators,
+    spoilageWarning: l.vunduSpoilageWarning,
+    cookingTip: l.vunduCookingTip,
   ),
 ];
 
 class _SpeciesScreenState extends State<SpeciesScreen> {
   String _search = '';
+  late List<_SpeciesData> _allSpecies;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _allSpecies = _buildSpecies(AppLocalizations.of(context)!);
+  }
 
   List<_SpeciesData> get _filtered => _allSpecies.where((s) {
     if (_search.isEmpty) return true;
@@ -134,16 +124,16 @@ class _SpeciesScreenState extends State<SpeciesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Fish directory')),
+      appBar: AppBar(title: Text(l.speciesTitle)),
       body: Column(children: [
-        // Search
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           child: TextField(
             onChanged: (v) => setState(() => _search = v),
             decoration: InputDecoration(
-              hintText: 'Search species or local name...',
+              hintText: l.speciesSearch,
               hintStyle: const TextStyle(fontFamily: 'Poppins'),
               prefixIcon: const Icon(Icons.search_rounded, size: 20),
               suffixIcon: _search.isNotEmpty
@@ -157,7 +147,6 @@ class _SpeciesScreenState extends State<SpeciesScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        // List
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -198,7 +187,6 @@ class _SpeciesTile extends StatelessWidget {
             color: isDark ? AppColors.darkBorder : AppColors.border, width: 0.5),
         ),
         child: Row(children: [
-          // Coloured emoji container
           Container(
             width: 50, height: 50,
             decoration: BoxDecoration(
@@ -251,6 +239,7 @@ class _SpeciesSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -260,14 +249,12 @@ class _SpeciesSheet extends StatelessWidget {
       builder: (_, ctrl) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
         child: ListView(controller: ctrl, children: [
-          // Handle
           Center(child: Container(width: 40, height: 4,
               decoration: BoxDecoration(
                   color: isDark ? AppColors.darkBorder : AppColors.border,
                   borderRadius: BorderRadius.circular(2)))),
           const SizedBox(height: 20),
 
-          // Header
           Row(children: [
             Container(width: 60, height: 60,
               decoration: BoxDecoration(
@@ -286,21 +273,18 @@ class _SpeciesSheet extends StatelessWidget {
           ]),
           const SizedBox(height: 20),
 
-          // Description
           Text(species.description,
               style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, height: 1.6)),
           const SizedBox(height: 20),
 
-          // Quick facts
-          _FactRow(icon: Icons.water_rounded, label: 'Habitat', value: species.habitat, color: species.color),
-          _FactRow(icon: Icons.calendar_today_rounded, label: 'Best season', value: species.season, color: species.color),
-          _FactRow(icon: Icons.sell_rounded, label: 'Market price', value: species.priceRange, color: species.color),
+          _FactRow(icon: Icons.water_rounded, label: l.speciesHabitat, value: species.habitat, color: species.color),
+          _FactRow(icon: Icons.calendar_today_rounded, label: l.speciesBestSeason, value: species.season, color: species.color),
+          _FactRow(icon: Icons.sell_rounded, label: l.speciesMarketPrice, value: species.priceRange, color: species.color),
           const SizedBox(height: 20),
 
-          // Freshness indicators
           _InfoSection(
             icon: Icons.check_circle_rounded,
-            title: 'Signs of freshness',
+            title: l.speciesSignsOfFreshness,
             text: species.freshIndicators,
             bgColor: AppColors.freshSurface,
             textColor: AppColors.primaryDark,
@@ -308,10 +292,9 @@ class _SpeciesSheet extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Spoilage warning
           _InfoSection(
             icon: Icons.warning_rounded,
-            title: 'Spoilage warning signs',
+            title: l.speciesSpoilageWarning,
             text: species.spoilageWarning,
             bgColor: AppColors.poorSurface,
             textColor: AppColors.poor,
@@ -319,10 +302,9 @@ class _SpeciesSheet extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Cooking tip
           _InfoSection(
             icon: Icons.restaurant_rounded,
-            title: 'Cooking tip',
+            title: l.speciesCookingTip,
             text: species.cookingTip,
             bgColor: isDark ? AppColors.darkSurfaceVariant : AppColors.surfaceVariant,
             textColor: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
@@ -349,7 +331,7 @@ class _FactRow extends StatelessWidget {
     child: Row(children: [
       Icon(icon, size: 16, color: color),
       const SizedBox(width: 10),
-      Text('$label: ', style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
+      Text('$label: ', style: const TextStyle(fontFamily: 'Poppins', fontSize: 13,
           color: AppColors.textSecondary)),
       Expanded(child: Text(value, style: const TextStyle(
           fontFamily: 'Poppins', fontSize: 13, fontWeight: FontWeight.w500))),

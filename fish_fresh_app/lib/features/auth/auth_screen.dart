@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_router.dart';
 import '../backend/auth_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class AuthScreen extends StatefulWidget {
   final bool isSignUp;
@@ -67,20 +68,22 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _resetPassword() async {
+    final l = AppLocalizations.of(context)!;
     if (_emailCtrl.text.trim().isEmpty) {
-      setState(() => _error = 'Enter your email address first.');
+      setState(() => _error = l.authEnterEmailFirst);
       return;
     }
     await AuthService.resetPassword(_emailCtrl.text.trim());
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Password reset email sent. Check your inbox.'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(l.authPasswordResetSent),
       ));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
@@ -92,7 +95,6 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               const SizedBox(height: 20),
 
-              // Logo + title
               Row(children: [
                 Container(
                   width: 48, height: 48,
@@ -112,22 +114,19 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 40),
 
               Text(
-                _isSignUp ? 'Create account' : 'Welcome back',
+                _isSignUp ? l.authCreateAccount : l.authWelcomeBack,
                 style: Theme.of(context).textTheme.headlineMedium,
               ).animate(delay: 50.ms).fadeIn().slideY(begin: 0.1),
 
               const SizedBox(height: 4),
 
               Text(
-                _isSignUp
-                    ? 'Sign up to save your scans and sync across devices'
-                    : 'Sign in to access your scan history',
+                _isSignUp ? l.authSignUpSubtitle : l.authSignInSubtitle,
                 style: Theme.of(context).textTheme.bodyMedium,
               ).animate(delay: 80.ms).fadeIn(),
 
               const SizedBox(height: 32),
 
-              // Error banner
               if (_error != null)
                 Container(
                   margin: const EdgeInsets.only(bottom: 16),
@@ -147,22 +146,21 @@ class _AuthScreenState extends State<AuthScreen> {
                   ]),
                 ).animate().fadeIn(duration: 200.ms),
 
-              // Form
               Form(
                 key: _formKey,
                 child: Column(children: [
                   if (_isSignUp) ...[
                     _Field(
                       controller: _nameCtrl,
-                      label: 'Full name',
+                      label: l.authFullName,
                       icon: Icons.person_rounded,
                       validator: (v) => (v?.trim().isEmpty ?? true)
-                          ? 'Name is required' : null,
+                          ? l.authNameRequired : null,
                     ),
                     const SizedBox(height: 12),
                     _Field(
                       controller: _phoneCtrl,
-                      label: 'Phone (optional)',
+                      label: l.authPhone,
                       icon: Icons.phone_rounded,
                       keyboardType: TextInputType.phone,
                     ),
@@ -170,19 +168,19 @@ class _AuthScreenState extends State<AuthScreen> {
                   ],
                   _Field(
                     controller: _emailCtrl,
-                    label: 'Email address',
+                    label: l.authEmail,
                     icon: Icons.email_rounded,
                     keyboardType: TextInputType.emailAddress,
                     validator: (v) {
-                      if (v?.trim().isEmpty ?? true) return 'Email is required';
-                      if (!v!.contains('@')) return 'Enter a valid email';
+                      if (v?.trim().isEmpty ?? true) return l.authEmailRequired;
+                      if (!v!.contains('@')) return l.authEmailInvalid;
                       return null;
                     },
                   ),
                   const SizedBox(height: 12),
                   _Field(
                     controller: _passwordCtrl,
-                    label: 'Password',
+                    label: l.authPassword,
                     icon: Icons.lock_rounded,
                     obscureText: _obscurePassword,
                     suffixIcon: IconButton(
@@ -194,9 +192,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           setState(() => _obscurePassword = !_obscurePassword),
                     ),
                     validator: (v) {
-                      if (v?.isEmpty ?? true) return 'Password is required';
+                      if (v?.isEmpty ?? true) return l.authPasswordRequired;
                       if (_isSignUp && v!.length < 8)
-                        return 'Password must be at least 8 characters';
+                        return l.authPasswordTooShort;
                       return null;
                     },
                   ),
@@ -210,14 +208,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: _resetPassword,
-                    child: const Text('Forgot password?',
-                        style: TextStyle(fontFamily: 'Poppins', fontSize: 13)),
+                    child: Text(l.authForgotPassword,
+                        style: const TextStyle(fontFamily: 'Poppins', fontSize: 13)),
                   ),
                 ),
 
               const SizedBox(height: 20),
 
-              // Submit button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -231,7 +228,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ? const SizedBox(width: 22, height: 22,
                           child: CircularProgressIndicator(
                               strokeWidth: 2, color: Colors.white))
-                      : Text(_isSignUp ? 'Create account' : 'Sign in',
+                      : Text(_isSignUp ? l.authCreateAccount : l.authSignIn,
                           style: const TextStyle(fontFamily: 'Poppins',
                               fontSize: 15, fontWeight: FontWeight.w600)),
                 ),
@@ -239,7 +236,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
               const SizedBox(height: 20),
 
-              // Toggle sign in / sign up
               Center(
                 child: TextButton(
                   onPressed: () => setState(() {
@@ -247,19 +243,16 @@ class _AuthScreenState extends State<AuthScreen> {
                     _error = null;
                   }),
                   child: Text(
-                    _isSignUp
-                        ? 'Already have an account? Sign in'
-                        : "Don't have an account? Sign up",
+                    _isSignUp ? l.authAlreadyHaveAccount : l.authDontHaveAccount,
                     style: const TextStyle(fontFamily: 'Poppins', fontSize: 13),
                   ),
                 ),
               ),
 
-              // Skip / continue as guest
               Center(
                 child: TextButton(
                   onPressed: () => context.go(AppRouter.home),
-                  child: Text('Continue without account',
+                  child: Text(l.authContinueWithout,
                       style: TextStyle(fontFamily: 'Poppins', fontSize: 12,
                           color: isDark ? AppColors.darkTextTertiary
                               : AppColors.textTertiary)),

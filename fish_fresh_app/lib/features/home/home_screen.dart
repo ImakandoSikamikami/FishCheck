@@ -9,6 +9,7 @@ import '../../models/freshness_result.dart';
 import '../../services/history_service.dart';
 import '../../services/offline_queue_service.dart';
 import '../../widgets/freshness_widgets.dart';
+import '../../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
       final online = results.any((r) => r != ConnectivityResult.none);
       if (mounted) setState(() => _isOnline = online);
     });
-    // Check initial state
     OfflineQueueService.hasConnectivity().then((online) {
       if (mounted) setState(() => _isOnline = online);
     });
@@ -55,15 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String get _greeting {
+  String _greeting(AppLocalizations l) {
     final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (h < 12) return l.homeGoodMorning;
+    if (h < 17) return l.homeGoodAfternoon;
+    return l.homeGoodEvening;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(_greeting,
+                        Text(_greeting(l),
                             style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: 2),
                         Text('FishCheck ZM',
@@ -140,21 +141,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? const SizedBox(height: 72)
                       : Row(children: [
                           Expanded(child: _StatCard(
-                            label: 'Scans today',
+                            label: l.homeScansToday,
                             value: '${_stats['today'] ?? 0}',
                             icon: Icons.camera_alt_rounded,
                             color: AppColors.primary,
                           )),
                           const SizedBox(width: 10),
                           Expanded(child: _StatCard(
-                            label: 'Fresh rate',
+                            label: l.homeFreshRate,
                             value: '${((_stats['freshRate'] ?? 0.0) * 100).round()}%',
                             icon: Icons.trending_up_rounded,
                             color: AppColors.fresh,
                           )),
                           const SizedBox(width: 10),
                           Expanded(child: _StatCard(
-                            label: 'Total scans',
+                            label: l.homeTotalScans,
                             value: '${_stats['total'] ?? 0}',
                             icon: Icons.history_rounded,
                             color: AppColors.accent,
@@ -181,14 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(children: [
                     Expanded(child: _QuickAction(
                       icon: Icons.menu_book_rounded,
-                      label: 'Species guide',
+                      label: l.homeSpeciesGuide,
                       color: const Color(0xFF1565A0),
                       onTap: () => context.go(AppRouter.species),
                     )),
                     const SizedBox(width: 10),
                     Expanded(child: _QuickAction(
                       icon: Icons.history_rounded,
-                      label: 'Scan history',
+                      label: l.homeScanHistory,
                       color: AppColors.primaryDark,
                       onTap: () => context.go(AppRouter.history),
                     )),
@@ -204,12 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Recent scans',
+                        Text(l.homeRecentScans,
                             style: Theme.of(context).textTheme.titleMedium),
                         TextButton(
                           onPressed: () => context.go(AppRouter.history),
-                          child: const Text('See all',
-                              style: TextStyle(fontFamily: 'Poppins')),
+                          child: Text(l.homeSeeAll,
+                              style: const TextStyle(fontFamily: 'Poppins')),
                         ),
                       ],
                     ),
@@ -258,25 +259,28 @@ class _OfflineBanner extends StatelessWidget {
   const _OfflineBanner({required this.pendingCount});
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    decoration: BoxDecoration(
-      color: AppColors.poorSurface,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.poor.withOpacity(0.3)),
-    ),
-    child: Row(children: [
-      Icon(Icons.wifi_off_rounded, size: 18, color: AppColors.poor),
-      const SizedBox(width: 10),
-      Expanded(child: Text(
-        pendingCount > 0
-            ? 'No internet · $pendingCount scan${pendingCount > 1 ? "s" : ""} queued'
-            : 'No internet connection',
-        style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
-            color: AppColors.poor, fontWeight: FontWeight.w500),
-      )),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.poorSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.poor.withOpacity(0.3)),
+      ),
+      child: Row(children: [
+        Icon(Icons.wifi_off_rounded, size: 18, color: AppColors.poor),
+        const SizedBox(width: 10),
+        Expanded(child: Text(
+          pendingCount > 0
+              ? l.homeOfflineQueued(pendingCount)
+              : l.homeNoInternet,
+          style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
+              color: AppColors.poor, fontWeight: FontWeight.w500),
+        )),
+      ]),
+    );
+  }
 }
 
 class _PendingQueueBanner extends StatelessWidget {
@@ -285,33 +289,36 @@ class _PendingQueueBanner extends StatelessWidget {
   const _PendingQueueBanner({required this.count, required this.onDrain});
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    decoration: BoxDecoration(
-      color: AppColors.primarySurface,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.primary.withOpacity(0.25)),
-    ),
-    child: Row(children: [
-      Icon(Icons.cloud_upload_rounded, size: 18, color: AppColors.primary),
-      const SizedBox(width: 10),
-      Expanded(child: Text(
-        '$count offline scan${count > 1 ? "s" : ""} ready to analyse',
-        style: const TextStyle(fontFamily: 'Poppins', fontSize: 13,
-            color: AppColors.primary, fontWeight: FontWeight.w500),
-      )),
-      TextButton(
-        onPressed: onDrain,
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-        child: const Text('Analyse now',
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 12,
-                fontWeight: FontWeight.w600, color: AppColors.primary)),
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.primarySurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withOpacity(0.25)),
       ),
-    ]),
-  );
+      child: Row(children: [
+        Icon(Icons.cloud_upload_rounded, size: 18, color: AppColors.primary),
+        const SizedBox(width: 10),
+        Expanded(child: Text(
+          l.homeOfflineReady(count),
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 13,
+              color: AppColors.primary, fontWeight: FontWeight.w500),
+        )),
+        TextButton(
+          onPressed: onDrain,
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(l.homeAnalyseNow,
+              style: const TextStyle(fontFamily: 'Poppins', fontSize: 12,
+                  fontWeight: FontWeight.w600, color: AppColors.primary)),
+        ),
+      ]),
+    );
+  }
 }
 
 class _StatCard extends StatelessWidget {
@@ -358,71 +365,74 @@ class _HeroScanButton extends StatelessWidget {
   const _HeroScanButton({required this.onTap, this.topSpecies});
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: double.infinity,
-      height: 160,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(children: [
-        Positioned(right: -16, top: -16,
-            child: Container(width: 110, height: 110,
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.07),
-                    shape: BoxShape.circle))),
-        Positioned(right: 30, bottom: -24,
-            child: Container(width: 70, height: 70,
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
-                    shape: BoxShape.circle))),
-        Padding(
-          padding: const EdgeInsets.all(22),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(9),
-                decoration: BoxDecoration(
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 160,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Stack(children: [
+          Positioned(right: -16, top: -16,
+              child: Container(width: 110, height: 110,
+                  decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.07),
+                      shape: BoxShape.circle))),
+          Positioned(right: 30, bottom: -24,
+              child: Container(width: 70, height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      shape: BoxShape.circle))),
+          Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: const Icon(Icons.camera_alt_rounded,
+                      color: Colors.white, size: 24),
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(l.homeScanAFish,
+                      style: const TextStyle(fontFamily: 'Poppins', fontSize: 20,
+                          fontWeight: FontWeight.w700, color: Colors.white)),
+                  const SizedBox(height: 3),
+                  Text(
+                    topSpecies != null && topSpecies != '—'
+                        ? l.homeMostScanned(topSpecies!)
+                        : l.homeTakeOrUpload,
+                    style: TextStyle(fontFamily: 'Poppins', fontSize: 12,
+                        color: Colors.white.withOpacity(0.75)),
+                  ),
+                ]),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 18, bottom: 18,
+            child: Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(11),
-                ),
-                child: const Icon(Icons.camera_alt_rounded,
-                    color: Colors.white, size: 24),
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Scan a fish',
-                    style: TextStyle(fontFamily: 'Poppins', fontSize: 20,
-                        fontWeight: FontWeight.w700, color: Colors.white)),
-                const SizedBox(height: 3),
-                Text(
-                  topSpecies != null && topSpecies != '—'
-                      ? 'Your most scanned: $topSpecies'
-                      : 'Take or upload a photo',
-                  style: TextStyle(fontFamily: 'Poppins', fontSize: 12,
-                      color: Colors.white.withOpacity(0.75)),
-                ),
-              ]),
-            ],
+                  shape: BoxShape.circle),
+              child: const Icon(Icons.arrow_forward_rounded,
+                  color: Colors.white, size: 18),
+            ),
           ),
-        ),
-        Positioned(
-          right: 18, bottom: 18,
-          child: Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle),
-            child: const Icon(Icons.arrow_forward_rounded,
-                color: Colors.white, size: 18),
-          ),
-        ),
-      ]),
-    ),
-  );
+        ]),
+      ),
+    );
+  }
 }
 
 class _QuickAction extends StatelessWidget {
@@ -521,23 +531,25 @@ class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.onScan});
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.set_meal_outlined, size: 60,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? AppColors.darkTextTertiary : AppColors.textHint),
-      const SizedBox(height: 14),
-      Text('No scans yet', style: Theme.of(context).textTheme.titleMedium),
-      const SizedBox(height: 6),
-      Text('Scan your first fish to get started',
-          style: Theme.of(context).textTheme.bodyMedium),
-      const SizedBox(height: 24),
-      OutlinedButton.icon(
-        onPressed: onScan,
-        icon: const Icon(Icons.camera_alt_rounded, size: 18),
-        label: const Text('Scan a fish',
-            style: TextStyle(fontFamily: 'Poppins')),
-      ),
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(Icons.set_meal_outlined, size: 60,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkTextTertiary : AppColors.textHint),
+        const SizedBox(height: 14),
+        Text(l.homeNoScansYet, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 6),
+        Text(l.homeScanFirstFish, style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(height: 24),
+        OutlinedButton.icon(
+          onPressed: onScan,
+          icon: const Icon(Icons.camera_alt_rounded, size: 18),
+          label: Text(l.homeScanAFish,
+              style: const TextStyle(fontFamily: 'Poppins')),
+        ),
+      ]),
+    );
+  }
 }

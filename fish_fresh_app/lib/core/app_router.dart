@@ -6,7 +6,7 @@ import '../features/onboarding/splash_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/shell/main_shell.dart';
 import '../features/home/home_screen.dart';
-import '../features/scan/result_screen.dart';
+import '../screens/result_screen.dart';
 import '../features/ml/ml_insights_screen.dart';
 import '../features/auth/auth_screen.dart';
 import '../features/vendors/vendors_screen.dart';
