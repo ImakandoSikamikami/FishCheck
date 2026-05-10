@@ -3,7 +3,7 @@
 AI-powered fish freshness analyser for Zambian fish vendors and consumers.
 
 ## About
-FishCheck ZM is a cross-platform mobile application that uses machine learning (MobileNetV3Small via TFLite) to analyse fish freshness from a photo — directly on the device, without internet.
+FishCheck ZM is a cross-platform mobile application that uses machine learning to analyse fish freshness from a photo — directly on the device, without internet.
 
 ## Platforms
 - Android
@@ -26,7 +26,7 @@ FishCheck ZM is a cross-platform mobile application that uses machine learning (
 - Fish vendor directory with WhatsApp integration
 
 ## Author
-- **Name:** Sikamikami Imakando
-- **Group:** 4321/23
-- **University:** KNRTU, Kazan, Russia
-- **Year:** 2026
+- Name: Sikamikami Imakando
+- Group: 4321/23
+- University: KNRTU, Kazan, Russia
+- Year: 2026
