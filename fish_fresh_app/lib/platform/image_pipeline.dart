@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum ImageSourceType { camera, gallery }
 
@@ -53,8 +55,29 @@ class ImagePipeline {
           defaultTargetPlatform == TargetPlatform.linux);
 
   /// Pick an image from [source] and run it through the processing pipeline.
-  /// Returns null if the user cancelled.
-  static Future<ProcessedImage?> pick(ImageSourceType source) async {
+  /// Returns null if the user cancelled or permission was denied.
+  /// Pass [context] to show a SnackBar when permission is denied.
+  static Future<ProcessedImage?> pick(
+    ImageSourceType source, {
+    BuildContext? context,
+  }) async {
+    if (!kIsWeb && !isDesktop) {
+      final permission = source == ImageSourceType.camera
+          ? Permission.camera
+          : Permission.photos;
+      final status = await permission.status;
+      if (status.isDenied) {
+        final result = await permission.request();
+        if (result.isDenied || result.isPermanentlyDenied) {
+          _showPermissionDenied(context);
+          return null;
+        }
+      } else if (status.isPermanentlyDenied) {
+        _showPermissionDenied(context);
+        return null;
+      }
+    }
+
     try {
       if (source == ImageSourceType.camera && !isDesktop) {
         return await _pickFromCamera();
@@ -63,10 +86,30 @@ class ImagePipeline {
         return await _pickFromFileSystem();
       }
       return await _pickFromGallery();
-    } catch (e) {
+    } on Exception catch (e) {
+      // image_picker throws PlatformException when the user permanently denies
+      // permission after the native prompt (e.g. iOS Settings revoked access).
+      final msg = e.toString();
+      if (msg.contains('camera_access_denied') ||
+          msg.contains('photo_access_denied') ||
+          msg.contains('access_denied')) {
+        _showPermissionDenied(context);
+        return null;
+      }
       debugPrint('ImagePipeline.pick error: $e');
       rethrow;
     }
+  }
+
+  static void _showPermissionDenied(BuildContext? context) {
+    if (context == null || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Camera/gallery permission denied. Please enable it in Settings.',
+        ),
+      ),
+    );
   }
 
   // ─── Camera ────────────────────────────────────────────────────────────────

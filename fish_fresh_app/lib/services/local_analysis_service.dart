@@ -18,6 +18,8 @@ class LocalAnalysisService {
           : await compute(_analysePixels, bytes);
 
       return _buildResult(metrics, bytes);
+    } on FreshnessException {
+      rethrow;
     } catch (e) {
       debugPrint('LocalAnalysis error: $e');
       return _unknownResult(bytes);
@@ -343,4 +345,11 @@ class _ImageMetrics {
     bodyBrightness: 0.5, redDominance: 1.0,
     pixelCount: 0,
   );
+}
+
+class FreshnessException implements Exception {
+  final String message;
+  const FreshnessException(this.message);
+  @override
+  String toString() => message;
 }

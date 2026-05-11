@@ -27,9 +27,9 @@
     <key>NSCameraUsageDescription</key>
     <string>FishCheck ZM needs camera access to photograph fish for freshness analysis.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>FishCheck ZM needs photo library access to select fish images for freshness analysis.</string>
+    <string>FishCheck ZM needs photo library access to select fish photos for freshness analysis.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>FishCheck ZM may save fish analysis results to your photo library.</string>
+    <string>FishCheck ZM needs permission to save fish scan results to your photo library.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>FishCheck ZM uses the camera which requires microphone access on iOS.</string>
     <key>NSLocationWhenInUseUsageDescription</key>

@@ -19,6 +19,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   bool _loading = true;
   String _filter = 'all';
   String _searchQuery = '';
+  bool _selectionMode = false;
+  Set<String> _selectedIds = {};
 
   @override
   void initState() {
@@ -63,6 +65,75 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
     if (confirm == true) {
       await HistoryService.clearHistory();
+      setState(() => _history = []);
+      await _load();
+    }
+  }
+
+  void _enterSelectionMode(String id) {
+    setState(() {
+      _selectionMode = true;
+      _selectedIds = {id};
+    });
+  }
+
+  void _exitSelectionMode() {
+    setState(() {
+      _selectionMode = false;
+      _selectedIds = {};
+    });
+  }
+
+  void _toggleSelection(String id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      } else {
+        _selectedIds.add(id);
+      }
+    });
+  }
+
+  void _selectAll() {
+    setState(() => _selectedIds = _filtered.map((r) => r.id).toSet());
+  }
+
+  Future<void> _deleteSelected() async {
+    final count = _selectedIds.length;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete scans',
+            style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w600)),
+        content: Text(
+          'Delete $count ${count == 1 ? 'scan' : 'scans'}? This cannot be undone.',
+          style: const TextStyle(fontFamily: 'Poppins'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel', style: TextStyle(fontFamily: 'Poppins')),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Delete',
+                style: TextStyle(fontFamily: 'Poppins', color: AppColors.spoiled,
+                    fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      final toDelete = Set<String>.from(_selectedIds);
+      setState(() {
+        _history.removeWhere((r) => toDelete.contains(r.id));
+        _selectionMode = false;
+        _selectedIds = {};
+      });
+      for (final id in toDelete) {
+        await HistoryService.deleteResult(id);
+      }
+      // Sync with storage to confirm deletions landed
       await _load();
     }
   }
@@ -83,81 +154,121 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l.historyTitle),
-        actions: [
-          if (_history.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_sweep_rounded),
-              tooltip: l.historyClearAllTooltip,
-              onPressed: _clearAll,
-            ),
-        ],
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _history.isEmpty && _searchQuery.isEmpty
-              ? _EmptyState()
-              : Column(children: [
-                  // Search bar
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: TextField(
-                      onChanged: (v) {
-                        setState(() { _searchQuery = v; _loading = true; });
-                        _load();
-                      },
-                      decoration: InputDecoration(
-                        hintText: l.historySearch,
-                        hintStyle: const TextStyle(fontFamily: 'Poppins'),
-                        prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                        suffixIcon: _searchQuery.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear_rounded, size: 18),
-                                onPressed: () {
-                                  setState(() { _searchQuery = ''; _loading = true; });
-                                  _load();
-                                },
-                              )
-                            : null,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
+    return PopScope(
+      canPop: !_selectionMode,
+      // ignore: deprecated_member_use
+      onPopInvoked: (didPop) {
+        if (!didPop) _exitSelectionMode();
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: _selectionMode
+            ? AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  tooltip: 'Cancel selection',
+                  onPressed: _exitSelectionMode,
+                ),
+                title: Text(
+                  '${_selectedIds.length} selected',
+                  style: const TextStyle(fontFamily: 'Poppins'),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.select_all_rounded),
+                    tooltip: 'Select all',
+                    onPressed: _selectAll,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    tooltip: 'Delete selected',
+                    onPressed: _selectedIds.isEmpty ? null : _deleteSelected,
+                  ),
+                ],
+              )
+            : AppBar(
+                title: Text(l.historyTitle),
+                actions: [
+                  if (_history.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.delete_sweep_rounded),
+                      tooltip: l.historyClearAllTooltip,
+                      onPressed: _clearAll,
+                    ),
+                ],
+              ),
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : _history.isEmpty && _searchQuery.isEmpty
+                ? _EmptyState()
+                : Column(children: [
+                    // Search bar
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      child: TextField(
+                        onChanged: (v) {
+                          setState(() { _searchQuery = v; _loading = true; });
+                          _load();
+                        },
+                        decoration: InputDecoration(
+                          hintText: l.historySearch,
+                          hintStyle: const TextStyle(fontFamily: 'Poppins'),
+                          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear_rounded, size: 18),
+                                  onPressed: () {
+                                    setState(() { _searchQuery = ''; _loading = true; });
+                                    _load();
+                                  },
+                                )
+                              : null,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                        ),
                       ),
                     ),
-                  ),
-                  // Filter chips
-                  _FilterRow(
-                    selected: _filter,
-                    onChanged: (f) => setState(() => _filter = f),
-                  ),
-                  // List
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _load,
-                      color: AppColors.primary,
-                      child: _filtered.isEmpty
-                          ? Center(
-                              child: Text(
-                                l.historyNoResults(_localizedFilterName(_filter, l)),
-                                style: const TextStyle(fontFamily: 'Poppins', fontSize: 14),
-                              ),
-                            )
-                          : ListView.builder(
-                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                              itemCount: _filtered.length,
-                              itemBuilder: (_, i) => _HistoryTile(
-                                result: _filtered[i],
-                                onTap: () => context.push('/result',
-                                    extra: {'result': _filtered[i], 'bytes': _filtered[i].imageBytes}),
-                                onDelete: () => _delete(_filtered[i]),
-                              )
-                                  .animate(delay: Duration(milliseconds: i * 40))
-                                  .fadeIn(duration: 250.ms)
-                                  .slideX(begin: 0.04, end: 0),
-                            ),
+                    // Filter chips
+                    _FilterRow(
+                      selected: _filter,
+                      onChanged: (f) => setState(() => _filter = f),
                     ),
-                  ),
-                ]),
+                    // List
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: _load,
+                        color: AppColors.primary,
+                        child: _filtered.isEmpty
+                            ? Center(
+                                child: Text(
+                                  l.historyNoResults(_localizedFilterName(_filter, l)),
+                                  style: const TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                                itemCount: _filtered.length,
+                                itemBuilder: (_, i) {
+                                  final result = _filtered[i];
+                                  final isSelected = _selectedIds.contains(result.id);
+                                  return _HistoryTile(
+                                    result: result,
+                                    selectionMode: _selectionMode,
+                                    isSelected: isSelected,
+                                    onTap: () => context.push('/result',
+                                        extra: {'result': result, 'bytes': result.imageBytes}),
+                                    onDelete: () => _delete(result),
+                                    onLongPress: () => _enterSelectionMode(result.id),
+                                    onToggleSelect: () => _toggleSelection(result.id),
+                                  )
+                                      .animate(delay: Duration(milliseconds: i * 40))
+                                      .fadeIn(duration: 250.ms)
+                                      .slideX(begin: 0.04, end: 0);
+                                },
+                              ),
+                      ),
+                    ),
+                  ]),
+      ),
     );
   }
 }
@@ -217,9 +328,22 @@ class _FilterRow extends StatelessWidget {
 
 class _HistoryTile extends StatelessWidget {
   final FreshnessResult result;
+  final bool selectionMode;
+  final bool isSelected;
   final VoidCallback onTap;
   final VoidCallback onDelete;
-  const _HistoryTile({required this.result, required this.onTap, required this.onDelete});
+  final VoidCallback onLongPress;
+  final VoidCallback onToggleSelect;
+
+  const _HistoryTile({
+    required this.result,
+    required this.selectionMode,
+    required this.isSelected,
+    required this.onTap,
+    required this.onDelete,
+    required this.onLongPress,
+    required this.onToggleSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +352,7 @@ class _HistoryTile extends StatelessWidget {
     final color = FreshnessColors.forLevel(result.freshness);
     return Dismissible(
       key: Key(result.id),
-      direction: DismissDirection.endToStart,
+      direction: selectionMode ? DismissDirection.none : DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
@@ -241,53 +365,90 @@ class _HistoryTile extends StatelessWidget {
       ),
       onDismissed: (_) => onDelete(),
       child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.darkSurface : AppColors.surface,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: isDark ? AppColors.darkBorder : AppColors.border,
-              width: 0.5,
-            ),
-          ),
-          child: Row(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: result.imageBytes != null
-                  ? Image.memory(result.imageBytes!, width: 58, height: 58, fit: BoxFit.cover)
-                  : Container(
-                      width: 58, height: 58,
-                      color: color.withOpacity(0.12),
-                      child: Icon(Icons.set_meal_rounded, color: color, size: 28),
-                    ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(result.fishType,
-                  style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 4),
-              FreshnessBadge(level: result.freshness, label: result.freshnessLabel),
-              const SizedBox(height: 4),
-              Text(
-                DateFormat('d MMM yyyy · HH:mm').format(result.analysedAt),
-                style: TextStyle(
-                  fontFamily: 'Poppins', fontSize: 11,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary,
-                ),
+        onTap: selectionMode ? onToggleSelect : onTap,
+        onLongPress: selectionMode ? null : onLongPress,
+        child: AnimatedOpacity(
+          opacity: selectionMode && !isSelected ? 0.55 : 1.0,
+          duration: const Duration(milliseconds: 150),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.primary.withValues(alpha: 0.08)
+                  : (isDark ? AppColors.darkSurface : AppColors.surface),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isSelected
+                    ? AppColors.primary
+                    : (isDark ? AppColors.darkBorder : AppColors.border),
+                width: isSelected ? 2.0 : 0.5,
               ),
-            ])),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text('${result.score}%',
-                  style: TextStyle(fontFamily: 'Poppins', fontSize: 18,
-                      fontWeight: FontWeight.w700, color: color)),
-              Text(l.historyScore,
-                  style: TextStyle(fontFamily: 'Poppins', fontSize: 10,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary)),
+            ),
+            child: Row(children: [
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: result.imageBytes != null
+                        ? Image.memory(result.imageBytes!, width: 58, height: 58, fit: BoxFit.cover)
+                        : Container(
+                            width: 58, height: 58,
+                            color: color.withValues(alpha: 0.12),
+                            child: Icon(Icons.set_meal_rounded, color: color, size: 28),
+                          ),
+                  ),
+                  if (selectionMode)
+                    Positioned(
+                      right: 2,
+                      bottom: 2,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isSelected
+                              ? AppColors.primary
+                              : Colors.white.withValues(alpha: 0.9),
+                          border: Border.all(
+                            color: isSelected ? AppColors.primary : Colors.grey.shade400,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: isSelected
+                            ? const Icon(Icons.check_rounded, size: 12, color: Colors.white)
+                            : null,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(result.fishType,
+                    style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                FreshnessBadge(level: result.freshness, label: result.freshnessLabel),
+                const SizedBox(height: 4),
+                Text(
+                  DateFormat('d MMM yyyy · HH:mm').format(result.analysedAt),
+                  style: TextStyle(
+                    fontFamily: 'Poppins', fontSize: 11,
+                    color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary,
+                  ),
+                ),
+              ])),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Text('${result.score}%',
+                    style: TextStyle(fontFamily: 'Poppins', fontSize: 18,
+                        fontWeight: FontWeight.w700, color: color)),
+                Text(l.historyScore,
+                    style: TextStyle(fontFamily: 'Poppins', fontSize: 10,
+                        color: isDark ? AppColors.darkTextTertiary : AppColors.textTertiary)),
+              ]),
             ]),
-          ]),
+          ),
         ),
       ),
     );
@@ -302,17 +463,19 @@ class _EmptyState extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.history_rounded, size: 64,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? AppColors.darkTextTertiary : AppColors.textHint),
+        Icon(Icons.history_rounded, size: 80, color: Colors.grey.shade300),
         const SizedBox(height: 16),
         Text(l.historyNoScansYet,
-            style: const TextStyle(fontFamily: 'Poppins', fontSize: 16, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 6),
+            style: const TextStyle(
+                fontFamily: 'Poppins', fontSize: 20, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         Text(l.historyNoScansSubtitle,
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 13,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? AppColors.darkTextTertiary : AppColors.textTertiary)),
+            style: const TextStyle(fontFamily: 'Poppins', color: Colors.grey)),
+        const SizedBox(height: 24),
+        ElevatedButton(
+          onPressed: () => context.go('/scan'),
+          child: const Text('Scan now', style: TextStyle(fontFamily: 'Poppins')),
+        ),
       ]),
     );
   }

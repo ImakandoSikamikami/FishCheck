@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/app_colors.dart';
 import '../platform/image_pipeline.dart';
+import '../services/local_analysis_service.dart';
 import '../services/tflite_freshness_service.dart';
 import '../services/history_service.dart';
 import '../services/offline_queue_service.dart';
@@ -48,6 +49,9 @@ class _ScanScreenState extends State<ScanScreen> {
         context.push('/result',
             extra: {'result': result, 'bytes': _picked!.bytes});
       }
+    } on FreshnessException catch (e) {
+      if (mounted) _showError(e.message, backgroundColor: Colors.orange);
+      return;
     } catch (e) {
       if (mounted) _showError(l.scanErrorAnalysis);
     } finally {
@@ -57,10 +61,10 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void _retake() => setState(() => _picked = null);
 
-  void _showError(String msg) {
+  void _showError(String msg, {Color? backgroundColor}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(msg),
-      backgroundColor: AppColors.spoiled,
+      backgroundColor: backgroundColor ?? AppColors.spoiled,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ));
